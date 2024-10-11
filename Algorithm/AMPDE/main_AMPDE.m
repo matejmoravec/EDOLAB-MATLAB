@@ -19,7 +19,8 @@
 % e-mail: danial DOT yazdani AT gmail DOT com
 % Copyright notice: (c) 2023 Danial Yazdani
 %**************************************************************************************************
-function [Problem,E_bbc,E_o,T_r,CurrentError,VisualizationInfo,Iteration] = main_AMPDE(VisualizationOverOptimization,PeakNumber,ChangeFrequency,Dimension,ShiftSeverity,EnvironmentNumber,RunNumber,BenchmarkName)
+function [fitnesses,Problem,E_bbc,E_o,T_r,CurrentError,VisualizationInfo,Iteration] = main_AMPDE(VisualizationOverOptimization,PeakNumber,ChangeFrequency,SampleInterval,Dimension,ShiftSeverity,EnvironmentNumber,RunNumber,BenchmarkName)
+fitnesses = zeros(RunNumber, ((ChangeFrequency/SampleInterval)*EnvironmentNumber+EnvironmentNumber));
 BestErrorBeforeChange = NaN(1,RunNumber);
 OfflineError = NaN(1,RunNumber);
 CurrentError = NaN (RunNumber,ChangeFrequency*EnvironmentNumber);
@@ -35,7 +36,7 @@ for RunCounter=1 : RunNumber
         rng(RunCounter);%This random seed setting is used to initialize the Problem
     end
     Problem = BenchmarkGenerator(PeakNumber,ChangeFrequency,Dimension,ShiftSeverity,EnvironmentNumber,BenchmarkName);
-    rng('shuffle');%Set a random seed for the optimizer
+    rng(10);%rng('shuffle');%Set a random seed for the optimizer
     tic; % Start runtime tracking for the current run
     % The lines above (including the start of the loop) are common between the main files of all EDOAs.
     %% Initialiing Optimizer
@@ -128,6 +129,8 @@ for RunCounter=1 : RunNumber
     BestErrorBeforeChange(1,RunCounter) = mean(Problem.Ebbc);  % Calculate and store average best error before each environmental change
     OfflineError(1,RunCounter) = mean(Problem.CurrentError);  % Calculate and store the offline error across all function evaluations
     CurrentError(RunCounter,:) = Problem.CurrentError;  % Record current error values for plotting convergence behavior over time
+    %% Comparison
+    fitnesses(RunCounter, :) = GetFitnessBeforeChange(Problem.CurrentPerformance, SampleInterval, ChangeFrequency, EnvironmentNumber);
 end
 %% Output Preparation: Common Across All EDOAs
 % This section gathers and summarizes the results of the experiment, including
