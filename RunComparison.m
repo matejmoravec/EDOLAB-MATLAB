@@ -4,7 +4,7 @@ nowPath = mfilename('fullpath');
 projectPath = nowPath(1:max(strfind(nowPath,'\'))-1);
 addpath(genpath(projectPath));
 %% ********Selecting Algorithm & Benchmark********
-AlgorithmName = 'AMPDE';
+%AlgorithmName = 'AMPDE';
 BenchmarkName = 'MPB';
 %% Get the algorithm and benchmark lists
 AlgorithmsFloder = dir([projectPath,'\Algorithm']);
@@ -21,9 +21,9 @@ for i = 3:length(BenchmarksFloder)
         BenchmarksList(BenchmarksCount,1) = BenchmarksFloder(i).name;
     end
 end
-if(~ismember(AlgorithmName,AlgorithmsList))
-    error("No Such Algorithm in EDOLAB");
-elseif(~ismember(BenchmarkName,BenchmarksList))
+%if(~ismember(AlgorithmName,AlgorithmsList))
+%    error("No Such Algorithm in EDOLAB");
+if(~ismember(BenchmarkName,BenchmarksList))
     error("No Such Benchmark in EDOLAB");
 end
 %% ********Benchmark parameters and Run number********
@@ -38,7 +38,7 @@ SampleInterval                 = 1000;  % Comparison parameter
 GeneratingExcelFile            = 1; % Set to 1 to save the output statistics in an Excel file (in the Results folder), 0 otherwise. 
 OutputFig                      = 1; % Set to 1 to draw offline error over time and current error plot, 0 otherwise.
 VisualizationOverOptimization  = 0; % This must be set to 0 if the user intends to use the Experimentation module.
-%% Running the chosen algorithm (EDOA) on the chosen benchmark
+%% Running the chosen algorithm on the chosen benchmark
 for i = 1:size(AlgorithmsList)
     main_EDO = str2func(['main_',char(AlgorithmsList(i))]);
     [fitnesses,Problem,E_bbc,E_o,CurrentError,VisualizationInfo,Iteration] = main_EDO(VisualizationOverOptimization,PeakNumber,ChangeFrequency,SampleInterval,Dimension,ShiftSeverity,EnvironmentNumber,RunNumber,BenchmarkName);
@@ -59,11 +59,11 @@ for i = 1:size(AlgorithmsList)
     evaluationNumber = SampleInterval;
     col = 1;
     while col <= numCols
-        if mod(evaluationNumber, ChangeFrequency) == 0
-            filename = [char(AlgorithmsList(i)), '_', BenchmarkName, 'Eval', num2str(evaluationNumber-1), '.txt'];
+        if mod(evaluationNumber, ChangeFrequency) == 0 && evaluationNumber ~= ChangeFrequency * EnvironmentNumber
+            filename = [char(AlgorithmsList(i)), '_', BenchmarkName, 'Eval', num2str(evaluationNumber), '.txt'];
             SaveAlgorithmResults(filename, fitnesses(:, col));
             col = col + 1;
-            filename = [char(AlgorithmsList(i)), '_', BenchmarkName, 'Eval', num2str(evaluationNumber), '.txt'];
+            filename = [char(AlgorithmsList(i)), '_', BenchmarkName, 'Eval', num2str(evaluationNumber+1), '.txt'];
             SaveAlgorithmResults(filename, fitnesses(:, col));
             col = col + 1;
         else
@@ -73,7 +73,4 @@ for i = 1:size(AlgorithmsList)
         end
         evaluationNumber = evaluationNumber + SampleInterval;
     end
-    %if i == 3
-    %    break;
-    %end
 end

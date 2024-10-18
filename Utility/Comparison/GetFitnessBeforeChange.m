@@ -1,6 +1,6 @@
 function results = GetFitnessBeforeChange(currentPerformance, sampleInterval, changeFrequency, environmentNumber)
 % Estimate the size of results
-estimatedSize = floor((length(currentPerformance) / sampleInterval)) + environmentNumber;
+estimatedSize = floor((length(currentPerformance) / sampleInterval)) + environmentNumber - 1;
 
 % Preallocate results with zeros
 results = zeros(1, estimatedSize);
@@ -12,9 +12,11 @@ results(1) = [max(currentPerformance(1:sampleInterval))];
 index = 2;
 for i = sampleInterval:sampleInterval:length(currentPerformance)-sampleInterval
     if mod(i+sampleInterval, changeFrequency) == 0
-        results(index) = max(currentPerformance(i+1:i+sampleInterval-1));
+        results(index) = max(currentPerformance(i+1:i+sampleInterval));
         index = index + 1;
-        results(index) = currentPerformance(i+sampleInterval);
+        if i + sampleInterval ~= changeFrequency * environmentNumber
+            results(index) = currentPerformance(i+sampleInterval+1);
+        end
     else
         results(index) = max(currentPerformance(i+1:i+sampleInterval));
     end

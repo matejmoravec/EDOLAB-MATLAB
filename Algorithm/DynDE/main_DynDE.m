@@ -20,7 +20,7 @@
 % Copyright notice: (c) 2023 Danial Yazdani
 %**************************************************************************************************
 function [fitnesses,Problem,E_bbc,E_o,T_r,CurrentError,VisualizationInfo,Iteration] = main_DynDE(VisualizationOverOptimization,PeakNumber,ChangeFrequency,SampleInterval,Dimension,ShiftSeverity,EnvironmentNumber,RunNumber,BenchmarkName)
-fitnesses = zeros(RunNumber, ((ChangeFrequency/SampleInterval)*EnvironmentNumber+EnvironmentNumber));
+fitnesses = zeros(RunNumber, ((ChangeFrequency/SampleInterval)*EnvironmentNumber+EnvironmentNumber-1));
 BestErrorBeforeChange = NaN(1,RunNumber);
 OfflineError = NaN(1,RunNumber);
 CurrentError = NaN (RunNumber,ChangeFrequency*EnvironmentNumber);
