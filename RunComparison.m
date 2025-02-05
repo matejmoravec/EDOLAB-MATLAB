@@ -24,8 +24,8 @@ if(~ismember(BenchmarkName,BenchmarksList))
     error("No Such Benchmark in EDOLAB");
 end
 %% ********Benchmark parameters and Run number********
-PeakNumber                     = 10;    % The default value is 10
-ChangeFrequency                = 500;  % The default value is 5000
+PeakNumber                     = 100;    % The default value is 10
+ChangeFrequency                = 5000;  % The default value is 5000
 Dimension                      = 5;     % The default value is 5. It must be set to 2 for using Education module
 ShiftSeverity                  = 1;     % The default value is 1
 EnvironmentNumber              = 100;   % The default value is 100
