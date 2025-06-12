@@ -30,6 +30,6 @@ function [FigureCurrentError] = OutputPlot(CurrentError,RunNumber,E_o,E_bbc,Algo
     legend;
     grid on;
     set(gcf,'NumberTitle','off') %don't show the figure number
-    FigureName = [AlgorithmName, ': E_o = ',num2str(E_o.mean),' , E_bbc = ',num2str(E_bbc.mean)]; %Compatible with Octave: remove the append function and use square brackets
+    FigureName = [char(AlgorithmName), ': E_o = ',char(num2str(E_o.mean)),' , E_bbc = ',char(num2str(E_bbc.mean))]; %Compatible with Octave: remove the append function and use square brackets
     set(gcf,'Name',FigureName)
 end

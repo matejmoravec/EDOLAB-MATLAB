@@ -59,7 +59,7 @@ function OutputExcel(AlgorithmName,BenchmarkName,ChangeFrequency,Dimension,PeakN
     Result{end,2} = E_o.StdErr;
     Result{end,3} = E_bbc.StdErr;
     Result{end,4} = T_r.StdErr;
-    pathout = [pathout,'\',AlgorithmName,'_',BenchmarkName,'_',char(datestr(now,30)),'.xlsx'];
+    pathout = [char(pathout),'\',char(AlgorithmName),'_',char(BenchmarkName),'_',char(datestr(now,30)),'.xlsx'];
     xlswrite(pathout,Result,1,'A1');
     % Change excel sttle
     %hExcel = actxserver('excel.application');
