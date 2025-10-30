@@ -20,7 +20,7 @@
 % E-mail: danial DOT yazdani AT gmail DOT com
 % Copyright notice: (c) 2023 Danial Yazdani
 %*****************************************************************************************
-function [Problem,Results,CurrentError,VisualizationInfo,Iteration] = main_mDE(VisualizationOverOptimization, RunNumber, BenchmarkName, ConfigurableProParameters, ConfigurableAlgParameters, progressInfo)
+function [Problem,Results,CurrentError,VisualizationInfo,Iteration,Moravec] = main_mDE(VisualizationOverOptimization, RunNumber, BenchmarkName, ConfigurableProParameters, ConfigurableAlgParameters, progressInfo, Moravec)
 %% Send Progress if Parallel is ON
 if isfield(progressInfo, 'IsParallel') && progressInfo.IsParallel
     send(progressInfo.Queue, struct('TaskID', progressInfo.TaskID, 'Status', 'Running', 'Progress', '0%'));
@@ -128,6 +128,7 @@ for RunCounter=1 : RunNumber
     Runtime(1,RunCounter) = elapsedTime;  % Store the runtime for the current run
     BestErrorBeforeChange(1,RunCounter) = mean(Problem.Ebbc);  % Calculate and store average best error before each environmental change
     OfflineError(1,RunCounter) = mean(Problem.CurrentError);  % Calculate and store the offline error across all function evaluations
+    Moravec.FitnessValues(:,RunCounter) = Problem.CurrentPerformance(Moravec.FEs);
         % User defined Indicators for all EDOAs.
     fnames = fieldnames(Problem.Indicators);
     for m = 1 : numel(fnames)

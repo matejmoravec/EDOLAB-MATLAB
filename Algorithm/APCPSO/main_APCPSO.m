@@ -20,7 +20,7 @@
 % e-mail: danial DOT yazdani AT gmail DOT com
 % Copyright notice: (c) 2023 Danial Yazdani
 %*****************************************************************************************
-function [Problem,Results,CurrentError,VisualizationInfo,Iteration] = main_APCPSO(VisualizationOverOptimization, RunNumber, BenchmarkName, ConfigurableProParameters, ConfigurableAlgParameters, progressInfo)
+function [Problem,Results,CurrentError,VisualizationInfo,Iteration,Moravec] = main_APCPSO(VisualizationOverOptimization, RunNumber, BenchmarkName, ConfigurableProParameters, ConfigurableAlgParameters, progressInfo, Moravec)
 %% Send Progress if Parallel is ON
 if isfield(progressInfo, 'IsParallel') && progressInfo.IsParallel
     send(progressInfo.Queue, struct('TaskID', progressInfo.TaskID, 'Status', 'Running', 'Progress', '0%'));
@@ -127,7 +127,8 @@ for RunCounter = 1 : RunNumber
     Runtime(1,RunCounter) = elapsedTime;
     BestErrorBeforeChange(1,RunCounter) = mean(Problem.Ebbc);
     OfflineError(1,RunCounter) = mean(Problem.CurrentError);
-     CurrentError(RunCounter,:) = Problem.CurrentError; % Record current error values for plotting convergence behavior over time
+    CurrentError(RunCounter,:) = Problem.CurrentError; % Record current error values for plotting convergence behavior over time
+    Moravec.FitnessValues(:,RunCounter) = Problem.CurrentPerformance(Moravec.FEs);
     % User defined Indicators for all EDOAs.
     fnames = fieldnames(Problem.Indicators);
     for m = 1 : numel(fnames)
