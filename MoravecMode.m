@@ -6,7 +6,7 @@ allPaths = genpath(projectPath);
 pathsToAdd = regexprep(allPaths, '[^;]*OctaveVersion[^;]*;?', '');
 addpath(pathsToAdd);
 %% ********Selecting Algorithm(s) & Benchmark********
-AlgorithmNames = {'ACFPSO', 'AMPDE', 'AMPPSO', 'AmQSO', 'AMSO', 'APCPSO', 'CDE', 'CESO', 'CPSO', 'CPSOR', 'DPCPSO', 'DSPSO', 'DynDE', 'DynPopDE', 'FTMPSO', 'HmSO', 'IDSPSO', 'ImQSO', 'mCMAES', 'mDE', 'mjDE', 'mPSO', 'mQSO', 'psfNBC', 'RPSO', 'SPSO_AP_AD', 'TMIPSO'};   % Please input the name of algorithm(s) (EDOA(s)) you want to run here (names are case sensitive).
+AlgorithmNames = {'ACFPSO', 'AMPDE', 'AMPPSO', 'AMPPSO_BC', 'AMPPSO_GI', 'AmQSO', 'AMSO', 'APCPSO', 'CDE', 'CESO', 'CPSO', 'CPSOR', 'DPCPSO', 'DSPSO', 'DynDE', 'DynPopDE', 'FTMPSO', 'HmSO', 'IDSPSO', 'ImQSO', 'mCMAES', 'mDE', 'mjDE', 'mPSO', 'mQSO', 'psfNBC', 'RPSO', 'SPSO_AP_AD', 'TMIPSO'};   % Please input the name of algorithm(s) (EDOA(s)) you want to run here (names are case sensitive).
 BenchmarkName = 'GMPB';                  % Please input the name of benchmark you want to use here (names are case sensitive).
 %% Get the algorithm and benchmark lists
 AlgorithmsFolder = dir([projectPath, '\Algorithm']);
