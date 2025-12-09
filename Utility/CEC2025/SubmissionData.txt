@@ -1,0 +1,504 @@
+[SPSO_AP_AD][F1]
+Best: 4.1704e-09
+Worst: 313.4727
+Average: 1.4526
+Median: 1.3257
+Standard deviation: 0.084171
+[SPSO_AP_AD][F2]
+Best: 3.6612e-08
+Worst: 224.3523
+Average: 1.4019
+Median: 1.3394
+Standard deviation: 0.067223
+[SPSO_AP_AD][F3]
+Best: 1.7665e-06
+Worst: 194.2129
+Average: 1.8093
+Median: 1.8195
+Standard deviation: 0.056197
+[SPSO_AP_AD][F4]
+Best: 1.0422e-05
+Worst: 146.2263
+Average: 2.0683
+Median: 2.085
+Standard deviation: 0.040535
+[SPSO_AP_AD][F5]
+Best: 0.0003701
+Worst: 118.1109
+Average: 2.1649
+Median: 2.1605
+Standard deviation: 0.031805
+[SPSO_AP_AD][F6]
+Best: 0.00040669
+Worst: 208.4126
+Average: 1.8504
+Median: 1.6903
+Standard deviation: 0.090405
+[SPSO_AP_AD][F7]
+Best: 0.026031
+Worst: 261.805
+Average: 3.3553
+Median: 3.2378
+Standard deviation: 0.13347
+[SPSO_AP_AD][F8]
+Best: 0.10552
+Worst: 249.613
+Average: 5.6118
+Median: 5.3705
+Standard deviation: 0.23898
+[SPSO_AP_AD][F9]
+Best: 0.065306
+Worst: 345.9157
+Average: 6.2735
+Median: 6.267
+Standard deviation: 0.22903
+[SPSO_AP_AD][F10]
+Best: 1.0418
+Worst: 574.6425
+Average: 28.6851
+Median: 28.5663
+Standard deviation: 0.70274
+[SPSO_AP_AD][F11]
+Best: 3.6082e-07
+Worst: 249.1442
+Average: 2.1403
+Median: 2.0055
+Standard deviation: 0.079505
+[SPSO_AP_AD][F12]
+Best: 1.1448e-06
+Worst: 225.9259
+Average: 4.1507
+Median: 4.1611
+Standard deviation: 0.086262
+[ACFPSO][F1]
+Best: 0.00075593
+Worst: 311.6529
+Average: 1.4284
+Median: 1.2934
+Standard deviation: 0.069179
+[AMPPSO_BC][F1]
+Best: 0.0032796
+Worst: 348.6264
+Average: 1.1142
+Median: 1.0492
+Standard deviation: 0.049181
+[AMPPSO_GI][F1]
+Best: 0.0030568
+Worst: 363.3488
+Average: 1.1024
+Median: 1.029
+Standard deviation: 0.044248
+[DUS][F1]
+Best: 0.014233
+Worst: 541.5238
+Average: 5.2698
+Median: 5.047
+Standard deviation: 0.24633
+[PSPSO][F1]
+Best: 0.031916
+Worst: 356.5809
+Average: 1.6399
+Median: 1.3636
+Standard deviation: 0.11592
+[DPPSO][F1]
+Best: 2.0886e-05
+Worst: 362.1962
+Average: 1.5254
+Median: 1.4808
+Standard deviation: 0.083494
+[ACFPSO][F2]
+Best: 0.00021849
+Worst: 264.7738
+Average: 1.6066
+Median: 1.4358
+Standard deviation: 0.089834
+[AMPPSO_BC][F2]
+Best: 0.00522
+Worst: 245.0181
+Average: 1.3553
+Median: 1.3341
+Standard deviation: 0.056885
+[AMPPSO_GI][F2]
+Best: 0.0027685
+Worst: 299.9633
+Average: 1.2743
+Median: 1.2492
+Standard deviation: 0.046124
+[DUS][F2]
+Best: 0.025112
+Worst: 310.8892
+Average: 5.4005
+Median: 5.4398
+Standard deviation: 0.12889
+[PSPSO][F2]
+Best: 0.028885
+Worst: 211.2563
+Average: 2.5836
+Median: 2.5842
+Standard deviation: 0.14352
+[DPPSO][F2]
+Best: 0.00037553
+Worst: 216.0323
+Average: 1.696
+Median: 1.5686
+Standard deviation: 0.079365
+[ACFPSO][F3]
+Best: 0.0014006
+Worst: 173.6139
+Average: 2.0702
+Median: 2.0535
+Standard deviation: 0.062599
+[AMPPSO_BC][F3]
+Best: 0.018357
+Worst: 183.7465
+Average: 1.8783
+Median: 1.8368
+Standard deviation: 0.049169
+[AMPPSO_GI][F3]
+Best: 0.026207
+Worst: 149.4872
+Average: 1.7694
+Median: 1.7191
+Standard deviation: 0.043845
+[DUS][F3]
+Best: 0.033666
+Worst: 257.4704
+Average: 5.7753
+Median: 5.7315
+Standard deviation: 0.12022
+[PSPSO][F3]
+Best: 0.065085
+Worst: 173.7354
+Average: 4.0809
+Median: 4.0665
+Standard deviation: 0.11628
+[DPPSO][F3]
+Best: 0.0011899
+Worst: 176.5895
+Average: 2.152
+Median: 2.2291
+Standard deviation: 0.075141
+[ACFPSO][F4]
+Best: 0.0011905
+Worst: 173.6314
+Average: 2.1987
+Median: 2.1864
+Standard deviation: 0.06506
+[AMPPSO_BC][F4]
+Best: 0.01532
+Worst: 174.6346
+Average: 2.1468
+Median: 2.1007
+Standard deviation: 0.041625
+[AMPPSO_GI][F4]
+Best: 0.062284
+Worst: 167.0627
+Average: 1.9619
+Median: 1.9912
+Standard deviation: 0.026306
+[DUS][F4]
+Best: 0.022958
+Worst: 178.2168
+Average: 5.485
+Median: 5.4655
+Standard deviation: 0.090087
+[PSPSO][F4]
+Best: 0.064869
+Worst: 151.2596
+Average: 4.2718
+Median: 4.1489
+Standard deviation: 0.12232
+[DPPSO][F4]
+Best: 0.002514
+Worst: 139.1163
+Average: 2.243
+Median: 2.2758
+Standard deviation: 0.048249
+[ACFPSO][F5]
+Best: 0.00031598
+Worst: 126.0386
+Average: 2.3657
+Median: 2.2947
+Standard deviation: 0.049949
+[AMPPSO_BC][F5]
+Best: 0.016099
+Worst: 143.3885
+Average: 2.3227
+Median: 2.3058
+Standard deviation: 0.039694
+[AMPPSO_GI][F5]
+Best: 0.024979
+Worst: 141.2556
+Average: 2.167
+Median: 2.1705
+Standard deviation: 0.019995
+[DUS][F5]
+Best: 0.041046
+Worst: 164.6742
+Average: 5.2081
+Median: 5.2953
+Standard deviation: 0.070237
+[PSPSO][F5]
+Best: 0.075025
+Worst: 117.3712
+Average: 4.5341
+Median: 4.5522
+Standard deviation: 0.13656
+[DPPSO][F5]
+Best: 0.00054916
+Worst: 114.5768
+Average: 2.4013
+Median: 2.4171
+Standard deviation: 0.051005
+[ACFPSO][F6]
+Best: 0.0059705
+Worst: 184.3421
+Average: 2.4216
+Median: 2.3648
+Standard deviation: 0.12788
+[AMPPSO_BC][F6]
+Best: 0.018627
+Worst: 223.6729
+Average: 2.0624
+Median: 2.0777
+Standard deviation: 0.08429
+[AMPPSO_GI][F6]
+Best: 0.049202
+Worst: 273.7322
+Average: 2.0215
+Median: 2.026
+Standard deviation: 0.059172
+[DPPSO][F6]
+Best: 0.0034855
+Worst: 238.7005
+Average: 2.2833
+Median: 2.2599
+Standard deviation: 0.088091
+[DUS][F6]
+Best: 0.046482
+Worst: 313.9292
+Average: 7.7259
+Median: 7.7007
+Standard deviation: 0.1557
+[PSPSO][F6]
+Best: 0.10175
+Worst: 208.6252
+Average: 3.0064
+Median: 3.0793
+Standard deviation: 0.12973
+[ACFPSO][F7]
+Best: 0.011918
+Worst: 218.2888
+Average: 4.1837
+Median: 3.816
+Standard deviation: 0.18721
+[AMPPSO_BC][F7]
+Best: 0.042635
+Worst: 259.0408
+Average: 4.036
+Median: 4.0079
+Standard deviation: 0.15562
+[AMPPSO_GI][F7]
+Best: 0.12835
+Worst: 251.7518
+Average: 3.7176
+Median: 3.6164
+Standard deviation: 0.11223
+[DPPSO][F7]
+Best: 0.0090414
+Worst: 233.0608
+Average: 4.1093
+Median: 3.7865
+Standard deviation: 0.17067
+[DUS][F7]
+Best: 0.070417
+Worst: 305.7924
+Average: 12.328
+Median: 12.3463
+Standard deviation: 0.28164
+[PSPSO][F7]
+Best: 0.089949
+Worst: 247.075
+Average: 4.2682
+Median: 4.2138
+Standard deviation: 0.1602
+[ACFPSO][F8]
+Best: 0.021917
+Worst: 220.7883
+Average: 6.9905
+Median: 6.6469
+Standard deviation: 0.35512
+[AMPPSO_BC][F8]
+Best: 0.16061
+Worst: 284.3647
+Average: 6.4913
+Median: 6.412
+Standard deviation: 0.15698
+[AMPPSO_GI][F8]
+Best: 0.20507
+Worst: 363.5154
+Average: 6.2851
+Median: 6.2929
+Standard deviation: 0.1803
+[DPPSO][F8]
+Best: 0.10042
+Worst: 287.6583
+Average: 7.6348
+Median: 7.1714
+Standard deviation: 0.36432
+[DUS][F8]
+Best: 0.66722
+Worst: 279.4027
+Average: 21.8959
+Median: 22.0359
+Standard deviation: 0.42454
+[PSPSO][F8]
+Best: 0.2995
+Worst: 227.3867
+Average: 5.9103
+Median: 6.1553
+Standard deviation: 0.19207
+[ACFPSO][F9]
+Best: 0.10942
+Worst: 358.8511
+Average: 8.8166
+Median: 8.1453
+Standard deviation: 0.51268
+[AMPPSO_BC][F9]
+Best: 0.066801
+Worst: 411.4004
+Average: 5.0899
+Median: 4.8498
+Standard deviation: 0.19886
+[AMPPSO_GI][F9]
+Best: 0.093883
+Worst: 408.3946
+Average: 4.1827
+Median: 4.1385
+Standard deviation: 0.15046
+[DPPSO][F9]
+Best: 0.067839
+Worst: 377.2047
+Average: 8.858
+Median: 8.7087
+Standard deviation: 0.4596
+[DUS][F9]
+Best: 0.18829
+Worst: 438.2491
+Average: 11.8502
+Median: 11.8669
+Standard deviation: 0.41815
+[PSPSO][F9]
+Best: 0.41712
+Worst: 372.9671
+Average: 6.0484
+Median: 5.9704
+Standard deviation: 0.20813
+[ACFPSO][F10]
+Best: 0.75223
+Worst: 579.4922
+Average: 43.6087
+Median: 39.6473
+Standard deviation: 2.7049
+[AMPPSO_BC][F10]
+Best: 0.41798
+Worst: 683.2394
+Average: 20.6115
+Median: 20.4448
+Standard deviation: 0.92389
+[AMPPSO_GI][F10]
+Best: 0.62762
+Worst: 620.4133
+Average: 16.3761
+Median: 15.807
+Standard deviation: 0.47868
+[DPPSO][F10]
+Best: 0.7087
+Worst: 583.1885
+Average: 42.9574
+Median: 41.5464
+Standard deviation: 2.1337
+[DUS][F10]
+Best: 0.64697
+Worst: 602.6034
+Average: 24.007
+Median: 24.2809
+Standard deviation: 0.48563
+[PSPSO][F10]
+Best: 2.9968
+Worst: 554.4864
+Average: 17.8448
+Median: 17.2925
+Standard deviation: 0.68341
+[ACFPSO][F11]
+Best: 8.656e-05
+Worst: 273.3983
+Average: 2.2713
+Median: 2.2025
+Standard deviation: 0.083029
+[AMPPSO_BC][F11]
+Best: 0.0037903
+Worst: 316.7123
+Average: 2.1906
+Median: 2.1439
+Standard deviation: 0.082688
+[AMPPSO_GI][F11]
+Best: 0.015935
+Worst: 235.2865
+Average: 2.1866
+Median: 2.1535
+Standard deviation: 0.058466
+[DPPSO][F11]
+Best: 2.8234e-05
+Worst: 205.1947
+Average: 2.2026
+Median: 2.045
+Standard deviation: 0.080458
+[DUS][F11]
+Best: 0.037213
+Worst: 303.4098
+Average: 6.4701
+Median: 6.4843
+Standard deviation: 0.14608
+[PSPSO][F11]
+Best: 0.055685
+Worst: 188.8097
+Average: 2.8503
+Median: 2.7259
+Standard deviation: 0.14732
+[ACFPSO][F12]
+Best: 6.5961e-06
+Worst: 206.4971
+Average: 4.1676
+Median: 4.1828
+Standard deviation: 0.1165
+[AMPPSO_BC][F12]
+Best: 0.015623
+Worst: 253.5471
+Average: 5.2645
+Median: 5.0999
+Standard deviation: 0.12584
+[AMPPSO_GI][F12]
+Best: 0.022801
+Worst: 241.5592
+Average: 5.0967
+Median: 5.141
+Standard deviation: 0.086789
+[DPPSO][F12]
+Best: 0.00034047
+Worst: 267.5111
+Average: 4.0929
+Median: 4.0308
+Standard deviation: 0.1115
+[DUS][F12]
+Best: 0.039778
+Worst: 323.8945
+Average: 7.6638
+Median: 7.5011
+Standard deviation: 0.21099
+[PSPSO][F12]
+Best: 0.054256
+Worst: 222.7161
+Average: 4.202
+Median: 4.1183
+Standard deviation: 0.12313
