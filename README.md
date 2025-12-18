@@ -2,41 +2,36 @@
 
 > A MATLAB Optimization Platform for Education and Experimentation in Dynamic Environments
 
-**Git repository:** EvoMindLab/EDOLAB (github.com)](https://github.com/EvoMindLab/EDOLAB)
+**Git repository:** [EvoMindLab/EDOLAB](https://github.com/EvoMindLab/EDOLAB)
 
 **The current version is `v2.10`**
 
-## Author List
-* **MAI PENG**, pengmai1998@gmail.com, School of Automation, China University of Geosciences,Wuhan, Hubei Key Laboratory of Advanced Control and Intelligent Automation for Complex Systems, and Engineering Research Center of Intelligent Technology for Geo-Exploration, Ministry of Education, China, 430074; 
+## 📰 News
 
-* **DELARAM YAZDANI**, delaram.yazdani@yahoo.com, Liverpool Logistics, Offshore and Marine (LOOM) Research Institute, Faculty of Engineering and Technology, Liverpool John Moores University, United Kingdom, L2 2ER; 
-
-* **DANIAL YAZDANI**, danial.yazdani@gmail.com, School of Computing Technologies, RMIT University, Melbourne, Australia, 3000;
-
-* **ZENENG SHE**, 20s151103@stu.hit.edu.cn, School of Computer Science and Technology, Harbin Institute of Technology, Shenzhen, China, 518055; 
-
-* **WENJIAN LUO**, luowenjian@hit.edu.cn, Guangdong Provincial Key Laboratory of Novel Security Intelligence Technologies, School of Computer Science and Technology, Harbin Institute of Technology and Peng Cheng Laboratory, Shenzhen, China, 518055; 
-
-* **CHANGHE LI**, School of Artificial Intelligence, Anhui University of Science & Technology, Hefei, China, 230000; 
-
-* **JUERGEN BRANKE**, Juergen.Branke@wbs.ac.uk, Operational Research and Management Sciences Group in Warwick Business school, University of Warwick, Coventry, United Kingdom, CV4 7AL; 
-
-* **TRUNG THANH NGUYEN**, T.T.Nguyen@ljmu.ac.uk, The Liverpool Logistics, Offshore and Marine (LOOM) Research Institute, Faculty of Engineering and Technology, Liverpool John Moores University, Liverpool, United Kingdom, L2 2ER; 
-
-* **AMIR H. GANDOMI**, Gandomi@uts.edu.au, Faculty of Engineering & Information Technology, University of Technology Sydney, Ultimo, Australia, 2007 and University Research and Innovation Center (EKIK), Obuda University, Budapest, Hungary, 1034; 
-
-* **SHENGXIANG YANG**, syang@dmu.ac.uk, Institute of Artificial Intelligence (IAI), School of Computer Science and Informatics, De Montfort University, Leicester, United Kingdom, LE1 9BH; 
-
-* **YAOCHU JIN**, yaochu.jin@uni-bielefeld.de, Faculty of Technology, Bielefeld University,
-Bielefeld, Germany, 33615; 
-
-* **XIN YAO**, xiny@sustech.edu.cn, Research Institute of Trustworthy Autonomous Systems (RITAS), and Guangdong Provincial Key Laboratory of Brain inspired Intelligent Computation, Department of Computer Science and Engineering, Southern University of Science and Technology, Shenzhen, China, 518055 and The Center of Excellence for Research in Computational Intelligence and Applications (CERCIA), School of Computer Science, University of Birmingham, Birmingham, United Kingdom, B15 2TT.
+- **[December 2025]** 🎉 This work has been published in **ACM Transactions on Mathematical Software** (CORE/ERA A* Ranked Journal)!
+  - **Paper**: [M. Peng, D. Yazdani, D. Yazdani, Z. She, W. Luo, C. Li, J. Branke, T. T. Nguyen, A. H. Gandomi, S. Yang, Y. Jin, and X. Yao, "Algorithm xxx: EDOLAB, a Platform for Research and Education in Evolutionary Dynamic Optimization," *ACM Transactions on Mathematical Software*, 2025.](https://dl.acm.org/doi/10.1145/3785134)  
+  - **DOI**: [10.1145/3785134](https://doi.org/10.1145/3785134)
+  - **Citation**: If you use EDOLAB in your research, please cite:
+    ```bibtex
+    @article{10.1145/3785134,
+      author = {Peng, Mai and Yazdani, Delaram and Yazdani, Danial and She, Zeneng and Luo, Wenjian and Li, Changhe and Branke, Juergen and Nguyen, Trung Thanh and Gandomi, Amir H. and Yang, Shengxiang and Jin, Yaochu and Yao, Xin},
+      title = {Algorithm xxx: EDOLAB, a Platform for Research and Education in Evolutionary Dynamic Optimization},
+      year = {2025},
+      publisher = {Association for Computing Machinery},
+      address = {New York, NY, USA},
+      issn = {0098-3500},
+      url = {https://doi.org/10.1145/3785134},
+      doi = {10.1145/3785134},
+      journal = {ACM Transactions on Mathematical Software},
+      month = dec
+    }
+    ```
 
 ## Get Started
 
 ```bash
 # clone the project
-git clone https://github.com/Danial-Yazdani/EDOLAB-MATLAB
+git clone https://github.com/EvoMindLab/EDOLAB.git
 ```
 
 ## Architecture Overview
@@ -271,7 +266,7 @@ run OctaveVersion/OctaveCodeMode.m
 
 ## For More Information
 
-For more information about EDOLAB, please refer to the [paper](https://arxiv.org/abs/2308.12644) and user manual. If you need further assistance, please contact Mai Peng at [pengmai1998@gmail.com](mailto:pengmai1998@gmail.com) or Danial Yazdani at [danial.yazdani@gmail.com](mailto:danial.yazdani@gmail.com).
+For more information about EDOLAB, please refer to the [paper](https://dl.acm.org/doi/10.1145/3785134) and user manual. If you need further assistance, please contact Mai Peng at [pengmai1998@gmail.com](mailto:pengmai1998@gmail.com) or Danial Yazdani at [danial.yazdani@gmail.com](mailto:danial.yazdani@gmail.com).
 
 ## MATLAB Support
 <img src="https://www.mathworks.com/etc.clientlibs/mathworks/clientlibs/customer-ui/templates/common/resources/images/pic-header-mathworks-logo.20221030234646672.svg" width="35%">
