@@ -8,22 +8,23 @@
 
 ## 📰 News
 
-- **[December 2025]** 🎉 This work has been published in **ACM Transactions on Mathematical Software** (CORE/ERA A* Ranked Journal)!
-  - **Paper**: [M. Peng, D. Yazdani, D. Yazdani, Z. She, W. Luo, C. Li, J. Branke, T. T. Nguyen, A. H. Gandomi, S. Yang, Y. Jin, and X. Yao, "Algorithm xxx: EDOLAB, a Platform for Research and Education in Evolutionary Dynamic Optimization," *ACM Transactions on Mathematical Software*, 2025.](https://dl.acm.org/doi/10.1145/3785134)  
+- **[December 2025]** 🎉 This work has been published in **ACM Transactions on Mathematical Software** (JCR Q1 - CORE/ERA A* Ranked Journal)!
+  - **Paper**: [M. Peng, D. Yazdani, D. Yazdani, Z. She, W. Luo, C. Li, J. Branke, T. T. Nguyen, A. H. Gandomi, S. Yang, Y. Jin, and X. Yao, "Algorithm 1060: EDOLAB, a Platform for Research and Education in Evolutionary Dynamic Optimization," *ACM Transactions on Mathematical Software*, 2025.](https://dl.acm.org/doi/10.1145/3785134)  
   - **DOI**: [10.1145/3785134](https://doi.org/10.1145/3785134)
   - **Citation**: If you use EDOLAB in your research, please cite:
     ```bibtex
-    @article{10.1145/3785134,
-      author = {Peng, Mai and Yazdani, Delaram and Yazdani, Danial and She, Zeneng and Luo, Wenjian and Li, Changhe and Branke, Juergen and Nguyen, Trung Thanh and Gandomi, Amir H. and Yang, Shengxiang and Jin, Yaochu and Yao, Xin},
-      title = {Algorithm xxx: EDOLAB, a Platform for Research and Education in Evolutionary Dynamic Optimization},
-      year = {2025},
-      publisher = {Association for Computing Machinery},
-      address = {New York, NY, USA},
-      issn = {0098-3500},
-      url = {https://doi.org/10.1145/3785134},
-      doi = {10.1145/3785134},
-      journal = {ACM Transactions on Mathematical Software},
-      month = dec
+    @article{mai2026EDOLAB,
+    author = {Peng, Mai and Yazdani, Delaram and Yazdani, Danial and She, Zeneng and Luo, Wenjian and Li, Changhe and Branke, Juergen and Nguyen, Trung Thanh and Gandomi, Amir H. and Yang, Shengxiang and Jin, Yaochu and Yao, Xin},
+    title = {Algorithm 1060: EDOLAB, a Platform for Research and Education in Evolutionary Dynamic Optimization},
+    journal = {ACM Transactions on Mathematical Software},
+    publisher = {Association for Computing Machinery},
+    url = {https://doi.org/10.1145/3785134},
+    doi = {10.1145/3785134},
+    articleno = {4},
+    year = {2026},
+    volume = {52},
+    number = {1},
+    pages={1--30}
     }
     ```
 
