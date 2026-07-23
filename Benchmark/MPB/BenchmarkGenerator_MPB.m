@@ -30,7 +30,9 @@
 %*****************************************************************************************
 function Problem = BenchmarkGenerator_MPB(BenchmarkName, ConfigurableParameters)
     disp('MPB Running')
+    R = CsvRandom('numbers.csv');                                   % [MOD]
     Problem                     = [];
+    Problem.FakeRng = R;                                            % [MOD]
     % Set Configurable Parameters
     fieldNames = fieldnames(ConfigurableParameters);
     for i = 1:length(fieldNames)
@@ -54,9 +56,30 @@ function Problem = BenchmarkGenerator_MPB(BenchmarkName, ConfigurableParameters)
     Problem.PeaksHeight         = NaN(Problem.EnvironmentNumber,Problem.PeakNumber);
     Problem.PeaksPosition       = NaN(Problem.PeakNumber,Problem.Dimension,Problem.EnvironmentNumber);
     Problem.PeaksWidth          = NaN(Problem.EnvironmentNumber,Problem.PeakNumber);
-    Problem.PeaksPosition(:,:,1)= Problem.MinCoordinate + (Problem.MaxCoordinate-Problem.MinCoordinate)*rand(Problem.PeakNumber,Problem.Dimension);
-    Problem.PeaksHeight(1,:)    = Problem.MinHeight + (Problem.MaxHeight-Problem.MinHeight)*rand(Problem.PeakNumber,1);
-    Problem.PeaksWidth(1,:)     = Problem.MinWidth + (Problem.MaxWidth-Problem.MinWidth)*rand(Problem.PeakNumber,1);
+    
+    % Problem.PeaksPosition(:,:,1)= Problem.MinCoordinate + (Problem.MaxCoordinate-Problem.MinCoordinate)*rand(Problem.PeakNumber,Problem.Dimension);
+    Upos = zeros(Problem.PeakNumber, Problem.Dimension);            % [MOD]
+    for rr = 1:Problem.PeakNumber                                   % [MOD]
+        for cc = 1:Problem.Dimension                                % [MOD]
+            Upos(rr,cc) = R.nextDouble(0,1);                        % [MOD]
+        end                                                         % [MOD]
+    end                                                             % [MOD]
+    Problem.PeaksPosition(:,:,1)= Problem.MinCoordinate + (Problem.MaxCoordinate-Problem.MinCoordinate)*Upos; % [MOD]
+
+    % Problem.PeaksHeight(1,:)    = Problem.MinHeight + (Problem.MaxHeight-Problem.MinHeight)*rand(Problem.PeakNumber,1);
+    Uheight = zeros(Problem.PeakNumber,1);                          % [MOD]
+    for rr = 1:Problem.PeakNumber                                   % [MOD]
+        Uheight(rr,1) = R.nextDouble(0,1);                          % [MOD]
+    end                                                             % [MOD]
+    Problem.PeaksHeight(1,:)    = (Problem.MinHeight + (Problem.MaxHeight-Problem.MinHeight)*Uheight).'; % [MOD]
+    
+    % Problem.PeaksWidth(1,:)     = Problem.MinWidth + (Problem.MaxWidth-Problem.MinWidth)*rand(Problem.PeakNumber,1);
+    Uwidth = zeros(Problem.PeakNumber,1);                           % [MOD]
+    for rr = 1:Problem.PeakNumber                                   % [MOD]
+        Uwidth(rr,1) = R.nextDouble(0,1);                           % [MOD]
+    end                                                             % [MOD]
+    Problem.PeaksWidth(1,:)     = (Problem.MinWidth + (Problem.MaxWidth-Problem.MinWidth)*Uwidth).'; % [MOD]
+    
     Problem.OptimumValue(1)     = max(Problem.PeaksHeight(1,:));
     Problem.BenchmarkName       = BenchmarkName;
     [Problem.OptimumValue(1), Problem.OptimumID(1)] = max(Problem.PeaksHeight(1,:));
@@ -88,11 +111,30 @@ function Problem = BenchmarkGenerator_MPB(BenchmarkName, ConfigurableParameters)
         end
     end
     for ii=2 : Problem.EnvironmentNumber%Generating all environments
-        ShiftOffset = randn(Problem.PeakNumber,Problem.Dimension);
+        %ShiftOffset = randn(Problem.PeakNumber,Problem.Dimension);
+        ShiftOffset = zeros(Problem.PeakNumber, Problem.Dimension); % [MOD]
+        for rr = 1:Problem.PeakNumber                               % [MOD]
+            for cc = 1:Problem.Dimension                            % [MOD]
+                ShiftOffset(rr,cc) = R.nextGaussian();              % [MOD]
+            end                                                     % [MOD]
+        end                                                         % [MOD]
+        
         Shift          = (ShiftOffset ./ pdist2(ShiftOffset,zeros(1,Problem.Dimension))).* Problem.ShiftSeverity;
         PeaksPosition  = Problem.PeaksPosition(:,:,ii-1) + Shift;
-        PeaksWidth  = Problem.PeaksWidth(ii-1,:) + (Problem.WidthSeverity*randn(1,Problem.PeakNumber));
-        PeaksHeight = Problem.PeaksHeight(ii-1,:) + (Problem.HeightSeverity*randn(1,Problem.PeakNumber));
+        %PeaksWidth  = Problem.PeaksWidth(ii-1,:) + (Problem.WidthSeverity*randn(1,Problem.PeakNumber));
+        Gwidth = zeros(1, Problem.PeakNumber);                      % [MOD]
+        for cc = 1:Problem.PeakNumber                               % [MOD]
+            Gwidth(1,cc) = R.nextGaussian();                        % [MOD]
+        end                                                         % [MOD]
+        PeaksWidth  = Problem.PeaksWidth(ii-1,:) + (Problem.WidthSeverity*Gwidth); % [MOD]
+        
+        % PeaksHeight = Problem.PeaksHeight(ii-1,:) + (Problem.HeightSeverity*randn(1,Problem.PeakNumber));
+        Gheight = zeros(1, Problem.PeakNumber);                     % [MOD]
+        for cc = 1:Problem.PeakNumber                               % [MOD]
+            Gheight(1,cc) = R.nextGaussian();                       % [MOD]
+        end                                                         % [MOD]
+        PeaksHeight = Problem.PeaksHeight(ii-1,:) + (Problem.HeightSeverity*Gheight); % [MOD]
+        
         tmp = PeaksPosition > Problem.MaxCoordinate;
         PeaksPosition(tmp) = (2*Problem.MaxCoordinate)- PeaksPosition(tmp);
         tmp = PeaksPosition < Problem.MinCoordinate;
