@@ -2,6 +2,7 @@ classdef CsvRandom < handle
     properties
         numbers double
         idx double = 1
+        rngCounter (1,1) double = 0
     end
 
     methods
@@ -32,6 +33,8 @@ classdef CsvRandom < handle
             end
             u = obj.numbers(obj.idx);
             obj.idx = obj.idx + 1;
+            obj.rngCounter = obj.rngCounter + 1;
+            CsvRandom.bumpGlobalCounter(1);
         end
 
         function x = nextDouble(obj, from, to)
@@ -52,6 +55,25 @@ classdef CsvRandom < handle
                 u2 = obj.next01();
             end
             g = sqrt(-2.0 * log(u1)) * cos(2.0 * pi * u2);
+        end
+    end
+
+    methods (Static)
+        function bumpGlobalCounter(delta)         % [MOD]
+            persistent globalCounter
+            if isempty(globalCounter), globalCounter = 0; end
+            globalCounter = globalCounter + delta;
+        end
+
+        function n = getGlobalCounter()           % [MOD]
+            persistent globalCounter
+            if isempty(globalCounter), globalCounter = 0; end
+            n = globalCounter;
+        end
+
+        function resetGlobalCounter()             % [MOD]
+            persistent globalCounter
+            globalCounter = 0;
         end
     end
 end

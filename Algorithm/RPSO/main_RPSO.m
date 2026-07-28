@@ -41,7 +41,7 @@ for RunCounter=1 : RunNumber
         rng(RunCounter);%This random seed setting is used to initialize the Problem
     end
     Problem = BenchmarkGenerator(BenchmarkName, ConfigurableProParameters);
-    rng('shuffle');%Set a random seed for the optimizer
+    %rng('shuffle');%Set a random seed for the optimizer    --> CsvRandom
     tic; % Start runtime tracking for the current run
     % The lines above (including the start of the loop) are common between the main files of all EDOAs.
     %% Initialiing Optimizer
@@ -102,6 +102,26 @@ for RunCounter=1 : RunNumber
         %% Optimization
         [Optimizer,Problem] = IterativeComponents_RPSO(Optimizer,Problem);
         if Problem.RecentChange == 1%When an environmental change has happened
+            fid = fopen('results90env.txt','a');
+            if fid ~= -1
+                fprintf(fid, '=== BEFORE CHANGE | FE=%d | ENV=%d ===\n', Problem.FE, Problem.Environmentcounter);
+            
+                for currentPopIndex = 1:size(Optimizer.pop.X,1)
+                    % Position
+                    fprintf(fid, 'particle %d: x=[', currentPopIndex-1); % 0-based index
+                    for d = 1:size(Optimizer.pop.X,2)
+                        if d > 1, fprintf(fid, ' '); end
+                        fprintf(fid, '%.16g', Optimizer.pop.X(currentPopIndex,d));
+                    end
+                    fprintf(fid, ']');
+            
+                    % Fitness
+                    fprintf(fid, '\nfitness=%.16g', Optimizer.pop.FitnessValue(currentPopIndex));
+                    fprintf(fid, '\n\n');
+                end
+                fprintf(fid, '\n');
+                fclose(fid);
+            end
             Problem.RecentChange = 0;
             [Optimizer,Problem] = ChangeReaction_RPSO(Optimizer,Problem);
             VisualizationFlag = 0;

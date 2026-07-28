@@ -22,7 +22,15 @@
 function [Optimizer,Problem] = ChangeReaction_RPSO(Optimizer,Problem)
 [~,SortedList]=sort(Optimizer.pop.PbestValue);
 for jj=1: Optimizer.NumberOfRandomizingParticles
-    Optimizer.pop.X(SortedList(jj),:) =  Optimizer.MinCoordinate + (( Optimizer.MaxCoordinate- Optimizer.MinCoordinate).*rand(1,Optimizer.Dimension));
+    idx = SortedList(jj);
+    
+    % Optimizer.pop.X(SortedList(jj),:) =  Optimizer.MinCoordinate + (( Optimizer.MaxCoordinate- Optimizer.MinCoordinate).*rand(1,Optimizer.Dimension));    --> CsvRandom
+    u = zeros(1,Optimizer.Dimension);
+    for cc = 1:Optimizer.Dimension
+        u(1,cc) = Problem.FakeRng.nextDouble(0,1);
+    end
+    Optimizer.pop.X(idx,:) = Optimizer.MinCoordinate + ((Optimizer.MaxCoordinate-Optimizer.MinCoordinate).*u);
+
     Optimizer.pop.Velocity(SortedList(jj),:) = zeros(1,Optimizer.Dimension);
     Optimizer.pop.PbestPosition(SortedList(jj),:) = Optimizer.pop.X(SortedList(jj),:);
 end

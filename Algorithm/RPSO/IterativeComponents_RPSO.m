@@ -21,7 +21,22 @@
 %*****************************************************************************************
 function [Optimizer, Problem] = IterativeComponents_RPSO(Optimizer,Problem)
 %% Sub-swarm movement
-Optimizer.pop.Velocity = Optimizer.x * (Optimizer.pop.Velocity + (Optimizer.c1 * rand(Optimizer.PopulationSize , Optimizer.Dimension).*(Optimizer.pop.PbestPosition - Optimizer.pop.X)) + (Optimizer.c2*rand(Optimizer.PopulationSize , Optimizer.Dimension).*(repmat(Optimizer.pop.BestPosition,Optimizer.PopulationSize,1) - Optimizer.pop.X)));
+% Optimizer.pop.Velocity = Optimizer.x * (Optimizer.pop.Velocity + (Optimizer.c1 * rand(Optimizer.PopulationSize , Optimizer.Dimension).*(Optimizer.pop.PbestPosition - Optimizer.pop.X)) + (Optimizer.c2*rand(Optimizer.PopulationSize , Optimizer.Dimension).*(repmat(Optimizer.pop.BestPosition,Optimizer.PopulationSize,1) - Optimizer.pop.X)));    --> CsvRandom
+R1 = zeros(Optimizer.PopulationSize, Optimizer.Dimension);
+R2 = zeros(Optimizer.PopulationSize, Optimizer.Dimension);
+for rr = 1:Optimizer.PopulationSize
+    for cc = 1:Optimizer.Dimension
+        R1(rr,cc) = Problem.FakeRng.nextDouble(0,1);
+        R2(rr,cc) = Problem.FakeRng.nextDouble(0,1);
+    end
+end
+
+Optimizer.pop.Velocity = Optimizer.x * ( ...
+    Optimizer.pop.Velocity ...
+    + (Optimizer.c1 * R1 .* (Optimizer.pop.PbestPosition - Optimizer.pop.X)) ...
+    + (Optimizer.c2 * R2 .* (repmat(Optimizer.pop.BestPosition,Optimizer.PopulationSize,1) - Optimizer.pop.X)) ...
+);
+
 Optimizer.pop.X = Optimizer.pop.X + Optimizer.pop.Velocity;
 for jj=1 : Optimizer.PopulationSize
     for kk=1 : Optimizer.Dimension

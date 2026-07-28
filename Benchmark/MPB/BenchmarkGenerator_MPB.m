@@ -30,7 +30,7 @@
 %*****************************************************************************************
 function Problem = BenchmarkGenerator_MPB(BenchmarkName, ConfigurableParameters)
     disp('MPB Running')
-    R = CsvRandom('numbers.csv');                                   % [MOD]
+    R = CsvRandom('numbers10f.csv');                                   % [MOD]
     Problem                     = [];
     Problem.FakeRng = R;                                            % [MOD]
     % Set Configurable Parameters
