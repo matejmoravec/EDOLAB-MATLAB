@@ -51,7 +51,11 @@ end
 if ~isempty(Optimizer.tracker)
     for jj=1:numel(Optimizer.tracker)
         for ii=1:Optimizer.SwarmMember
-            R = randn(1,Optimizer.Dimension);
+            % R = randn(1,Optimizer.Dimension);
+            R = zeros(1,Optimizer.Dimension);
+            for cc = 1:Optimizer.Dimension                   
+                R(cc) = randn_from_fake_rng(Problem.FakeRng);
+            end 
             shift = (R./pdist2(R,zeros(size(R)))).*Optimizer.ShiftSeverity;        
             Optimizer.Particle(Species(Optimizer.tracker(jj)).member(ii)).X = Optimizer.Particle(Species(Optimizer.tracker(jj)).seed).PbestPosition + shift;
         end
@@ -73,6 +77,7 @@ end
 %% Updating memory for all
 for jj=1 : numel(Optimizer.Particle)
     [Optimizer.Particle(jj).FitnessValue,Problem] = fitness(Optimizer.Particle(jj).X , Problem);
+    writeTraceLine_SPSO_AP_AD(Problem.FE, 'change', Optimizer.Particle(jj).X, Optimizer.Particle(jj).FitnessValue);
     Optimizer.Particle(jj).PbestFitness = Optimizer.Particle(jj).FitnessValue;
     Optimizer.Particle(jj).PbestPosition = Optimizer.Particle(jj).X;
 end

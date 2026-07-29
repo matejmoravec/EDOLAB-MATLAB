@@ -124,7 +124,14 @@ end
 for ii=1 : numel(Species)
     if Species(ii).Active ==1
         for jj=1 : Optimizer.SwarmMember
-            Optimizer.Particle(Species(ii).member(jj)).Velocity = Optimizer.x *(Optimizer.Particle(Species(ii).member(jj)).Velocity+(Optimizer.c1*rand(1,Optimizer.Dimension).*(Optimizer.Particle(Species(ii).member(jj)).PbestPosition-Optimizer.Particle(Species(ii).member(jj)).X))+(Optimizer.c2*rand(1,Optimizer.Dimension).*(Optimizer.Particle(Species(ii).seed).PbestPosition-Optimizer.Particle(Species(ii).member(jj)).X)));            
+            r1 = zeros(1,Optimizer.Dimension);
+            r2 = zeros(1,Optimizer.Dimension);
+            for cc = 1:Optimizer.Dimension
+                r1(cc) = Problem.FakeRng.nextDouble(0,1);
+                r2(cc) = Problem.FakeRng.nextDouble(0,1);
+            end
+            % Optimizer.Particle(Species(ii).member(jj)).Velocity = Optimizer.x *(Optimizer.Particle(Species(ii).member(jj)).Velocity+(Optimizer.c1*rand(1,Optimizer.Dimension).*(Optimizer.Particle(Species(ii).member(jj)).PbestPosition-Optimizer.Particle(Species(ii).member(jj)).X))+(Optimizer.c2*rand(1,Optimizer.Dimension).*(Optimizer.Particle(Species(ii).seed).PbestPosition-Optimizer.Particle(Species(ii).member(jj)).X)));            
+            Optimizer.Particle(Species(ii).member(jj)).Velocity = Optimizer.x *(Optimizer.Particle(Species(ii).member(jj)).Velocity+(Optimizer.c1*r1.*(Optimizer.Particle(Species(ii).member(jj)).PbestPosition-Optimizer.Particle(Species(ii).member(jj)).X))+(Optimizer.c2*r2.*(Optimizer.Particle(Species(ii).seed).PbestPosition-Optimizer.Particle(Species(ii).member(jj)).X)));
             Optimizer.Particle(Species(ii).member(jj)).X = Optimizer.Particle(Species(ii).member(jj)).Velocity + Optimizer.Particle(Species(ii).member(jj)).X;
             %bound handling
             tmp1 = Optimizer.Particle(Species(ii).member(jj)).X<Optimizer.MinCoordinate;
@@ -135,6 +142,7 @@ for ii=1 : numel(Species)
             Optimizer.Particle(Species(ii).member(jj)).Velocity(tmp2)=0;                
             %update fitness
             [Optimizer.Particle(Species(ii).member(jj)).FitnessValue,Problem]=fitness(Optimizer.Particle(Species(ii).member(jj)).X,Problem);
+            writeTraceLine_SPSO_AP_AD(Problem.FE, 'pso', Optimizer.Particle(Species(ii).member(jj)).X, Optimizer.Particle(Species(ii).member(jj)).FitnessValue);
             if Problem.RecentChange == 1
                 if ~isempty(removed_particle_index)
                     Optimizer.Particle(removed_particle_index) = [];

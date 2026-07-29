@@ -19,10 +19,19 @@
 % Copyright notice: (c) 2023 Danial Yazdani
 %*****************************************************************************************
 function [Optimizer,Problem]= SubPopulationGenerator_SPSO_AP_AD(LB,UB,npop,dimension,Problem)
-Optimizer.X = LB + (UB-LB).*rand(npop,dimension);
+%Optimizer.X = LB + (UB-LB).*rand(npop,dimension);
+U = zeros(npop,dimension);
+for rr = 1:npop
+    for cc = 1:dimension
+        U(rr,cc) = Problem.FakeRng.nextDouble(0,1);
+    end
+end
+Optimizer.X = LB + (UB-LB).*U;
+
 Optimizer.PbestPosition = Optimizer.X;
 Optimizer.Velocity = zeros(npop,dimension);
 [Optimizer.FitnessValue,Problem] = fitness(Optimizer.X,Problem);
+writeTraceLine_SPSO_AP_AD(Problem.FE, 'init', Optimizer.X(1,:), Optimizer.FitnessValue(1));
 if Problem.RecentChange == 0
     Optimizer.PbestFitness = Optimizer.FitnessValue;
 else

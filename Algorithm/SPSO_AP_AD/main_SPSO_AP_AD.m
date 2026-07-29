@@ -37,7 +37,7 @@ indicators = struct();
 
 for RunCounter=1 : RunNumber
     if VisualizationOverOptimization ~= 1
-        rng(RunCounter);%This random seed setting is used to initialize the Problem
+        % rng(RunCounter);%This random seed setting is used to initialize the Problem  --> CsvRandom
     end
     Problem = BenchmarkGenerator(BenchmarkName, ConfigurableProParameters);
     rng('shuffle');%Set a random seed for the optimizer
