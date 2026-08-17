@@ -22,6 +22,14 @@
 %
 % SIMPLIFIED VERSION of GMPB (only one sub-function, i.e., non-modular)
 %
+% [MOD] Every rand()/randn() call is replaced by an explicit loop over CsvRandom, so the run can be
+% replayed bit-for-bit against dynamic-optimization-kotlin's benchmark.gmpb.comp.GMPB. The original
+% lines are kept above each replacement as comments. Structure, field order and PeakVisibility are
+% otherwise unchanged from the original. Two library calls also had to be replaced, because they
+% are not reproducible from a specification: qr() (Householder via LAPACK) becomes classical
+% Gram-Schmidt, and randperm() becomes an explicit Fisher-Yates shuffle -- both matched exactly by
+% the Kotlin side.
+%
 % --------
 % License:
 % --------
@@ -32,7 +40,9 @@
 %*************************************************************************************************************************************
 function Problem = BenchmarkGenerator_GMPB(BenchmarkName, ConfigurableParameters)
      disp('GMPB Running')
+     R = CsvRandom('numbers10f.csv');                                % [MOD]
      Problem                     = [];
+     Problem.FakeRng = R;                                            % [MOD]
      % Set Configurable Parameters
      fieldNames = fieldnames(ConfigurableParameters);
      for i = 1:length(fieldNames)
@@ -65,25 +75,81 @@ function Problem = BenchmarkGenerator_GMPB(BenchmarkName, ConfigurableParameters
      Problem.PeaksHeight         = NaN(Problem.EnvironmentNumber,Problem.PeakNumber);
      Problem.PeaksPosition       = NaN(Problem.PeakNumber,Problem.Dimension,Problem.EnvironmentNumber);
      Problem.PeaksWidth          = NaN(Problem.PeakNumber,Problem.Dimension,Problem.EnvironmentNumber);
-     Problem.PeaksPosition(:,:,1)= Problem.MinCoordinate + (Problem.MaxCoordinate-Problem.MinCoordinate)*rand(Problem.PeakNumber,Problem.Dimension);
-     Problem.PeaksHeight(1,:)    = Problem.MinHeight + (Problem.MaxHeight-Problem.MinHeight)*rand(Problem.PeakNumber,1);
-     Problem.PeaksWidth(:,:,1)   = Problem.MinWidth + (Problem.MaxWidth-Problem.MinWidth)*rand(Problem.PeakNumber,Problem.Dimension);
+
+     % Problem.PeaksPosition(:,:,1)= Problem.MinCoordinate + (Problem.MaxCoordinate-Problem.MinCoordinate)*rand(Problem.PeakNumber,Problem.Dimension);
+     Upos = zeros(Problem.PeakNumber, Problem.Dimension);            % [MOD]
+     for rr = 1:Problem.PeakNumber                                   % [MOD]
+         for cc = 1:Problem.Dimension                                % [MOD]
+             Upos(rr,cc) = R.nextDouble(0,1);                        % [MOD]
+         end                                                         % [MOD]
+     end                                                             % [MOD]
+     Problem.PeaksPosition(:,:,1)= Problem.MinCoordinate + (Problem.MaxCoordinate-Problem.MinCoordinate)*Upos; % [MOD]
+
+     % Problem.PeaksHeight(1,:)    = Problem.MinHeight + (Problem.MaxHeight-Problem.MinHeight)*rand(Problem.PeakNumber,1);
+     Uheight = zeros(Problem.PeakNumber,1);                          % [MOD]
+     for rr = 1:Problem.PeakNumber                                   % [MOD]
+         Uheight(rr,1) = R.nextDouble(0,1);                          % [MOD]
+     end                                                             % [MOD]
+     Problem.PeaksHeight(1,:)    = (Problem.MinHeight + (Problem.MaxHeight-Problem.MinHeight)*Uheight).'; % [MOD]
+
+     % Problem.PeaksWidth(:,:,1)   = Problem.MinWidth + (Problem.MaxWidth-Problem.MinWidth)*rand(Problem.PeakNumber,Problem.Dimension);
+     Uwidth = zeros(Problem.PeakNumber, Problem.Dimension);          % [MOD]
+     for rr = 1:Problem.PeakNumber                                   % [MOD]
+         for cc = 1:Problem.Dimension                                % [MOD]
+             Uwidth(rr,cc) = R.nextDouble(0,1);                      % [MOD]
+         end                                                         % [MOD]
+     end                                                             % [MOD]
+     Problem.PeaksWidth(:,:,1)   = Problem.MinWidth + (Problem.MaxWidth-Problem.MinWidth)*Uwidth; % [MOD]
+
      [Problem.OptimumValue(1), Problem.OptimumID(1)]     = max(Problem.PeaksHeight(1,:));
      Problem.InitialRotationMatrix = NaN(Problem.Dimension,Problem.Dimension,Problem.PeakNumber);
      for ii=1 : Problem.PeakNumber
-         [Problem.InitialRotationMatrix(:,:,ii) , ~] = qr(rand(Problem.Dimension));
+         % [Problem.InitialRotationMatrix(:,:,ii) , ~] = qr(rand(Problem.Dimension));
+         Urot = zeros(Problem.Dimension, Problem.Dimension);         % [MOD]
+         for rr = 1:Problem.Dimension                                % [MOD]
+             for cc = 1:Problem.Dimension                            % [MOD]
+                 Urot(rr,cc) = R.nextDouble(0,1);                    % [MOD]
+             end                                                     % [MOD]
+         end                                                         % [MOD]
+         Problem.InitialRotationMatrix(:,:,ii) = GramSchmidt(Urot);  % [MOD]
      end
-     Problem.PeaksAngle          = Problem.MinAngle + (Problem.MaxAngle-Problem.MinAngle)*rand(Problem.PeakNumber,1);
-     Problem.tau                 = Problem.MinTau + (Problem.MaxTau-Problem.MinTau)*rand(Problem.PeakNumber,1);
+
+     % [MOD] The next two assignments are dead in the original: both are overwritten by the NaN
+     % arrays a few lines below before ever being read. They are commented out here (rather than
+     % replaced with CsvRandom loops) so they consume no random numbers, matching the Kotlin side,
+     % which likewise leaves them out.
+     % Problem.PeaksAngle          = Problem.MinAngle + (Problem.MaxAngle-Problem.MinAngle)*rand(Problem.PeakNumber,1);
+     % Problem.tau                 = Problem.MinTau + (Problem.MaxTau-Problem.MinTau)*rand(Problem.PeakNumber,1);
+
      Problem.RotationMatrix      = cell(1,Problem.EnvironmentNumber);%NaN(Problem.PeakNumber,Problem.Dimension,Problem.EnvironmentNumber);
      Problem.RotationMatrix{1}   = Problem.InitialRotationMatrix;
      Problem.PeaksAngle          = NaN(Problem.EnvironmentNumber,Problem.PeakNumber);
      Problem.tau                 = NaN(Problem.EnvironmentNumber,Problem.PeakNumber);
      Problem.eta                 = NaN(Problem.PeakNumber,4,Problem.EnvironmentNumber);
-     Problem.PeaksAngle(1,:)     = Problem.MinAngle + (Problem.MaxAngle-Problem.MinAngle)*rand(Problem.PeakNumber,1);
-     Problem.tau(1,:)            = Problem.MinTau + (Problem.MaxTau-Problem.MinTau)*rand(Problem.PeakNumber,1);
-     Problem.eta(:,:,1)          = Problem.MinEta + (Problem.MaxEta-Problem.MinEta)*rand(Problem.PeakNumber,4);
-  
+
+     % Problem.PeaksAngle(1,:)     = Problem.MinAngle + (Problem.MaxAngle-Problem.MinAngle)*rand(Problem.PeakNumber,1);
+     Uangle = zeros(Problem.PeakNumber,1);                           % [MOD]
+     for rr = 1:Problem.PeakNumber                                   % [MOD]
+         Uangle(rr,1) = R.nextDouble(0,1);                           % [MOD]
+     end                                                             % [MOD]
+     Problem.PeaksAngle(1,:)     = (Problem.MinAngle + (Problem.MaxAngle-Problem.MinAngle)*Uangle).'; % [MOD]
+
+     % Problem.tau(1,:)            = Problem.MinTau + (Problem.MaxTau-Problem.MinTau)*rand(Problem.PeakNumber,1);
+     Utau = zeros(Problem.PeakNumber,1);                             % [MOD]
+     for rr = 1:Problem.PeakNumber                                   % [MOD]
+         Utau(rr,1) = R.nextDouble(0,1);                             % [MOD]
+     end                                                             % [MOD]
+     Problem.tau(1,:)            = (Problem.MinTau + (Problem.MaxTau-Problem.MinTau)*Utau).'; % [MOD]
+
+     % Problem.eta(:,:,1)          = Problem.MinEta + (Problem.MaxEta-Problem.MinEta)*rand(Problem.PeakNumber,4);
+     Ueta = zeros(Problem.PeakNumber,4);                             % [MOD]
+     for rr = 1:Problem.PeakNumber                                   % [MOD]
+         for cc = 1:4                                                % [MOD]
+             Ueta(rr,cc) = R.nextDouble(0,1);                        % [MOD]
+         end                                                         % [MOD]
+     end                                                             % [MOD]
+     Problem.eta(:,:,1)          = Problem.MinEta + (Problem.MaxEta-Problem.MinEta)*Ueta; % [MOD]
+
      % Set user defined indicators
      Problem.Indicators = struct();
      jsonText = fileread('Indicators/Indicators.json');
@@ -111,14 +177,56 @@ function Problem = BenchmarkGenerator_GMPB(BenchmarkName, ConfigurableParameters
          end
      end
      for ii=2 : Problem.EnvironmentNumber%Generating all environments
-         ShiftOffset = randn(Problem.PeakNumber,Problem.Dimension);
+         % ShiftOffset = randn(Problem.PeakNumber,Problem.Dimension);
+         ShiftOffset = zeros(Problem.PeakNumber, Problem.Dimension); % [MOD]
+         for rr = 1:Problem.PeakNumber                               % [MOD]
+             for cc = 1:Problem.Dimension                            % [MOD]
+                 ShiftOffset(rr,cc) = R.nextGaussian();              % [MOD]
+             end                                                     % [MOD]
+         end                                                         % [MOD]
+
          Shift          = (ShiftOffset ./ pdist2(ShiftOffset,zeros(1,Problem.Dimension))).* Problem.ShiftSeverity;
          PeaksPosition  = Problem.PeaksPosition(:,:,ii-1) + Shift;
-         PeaksWidth  = Problem.PeaksWidth(:,:,ii-1) + (randn(Problem.PeakNumber,Problem.Dimension).* Problem.WidthSeverity);
-         PeaksHeight = Problem.PeaksHeight(ii-1,:) + (Problem.HeightSeverity*randn(1,Problem.PeakNumber));
-         PeaksAngle  = Problem.PeaksAngle(ii-1,:) + (Problem.AngleSeverity.*randn(1,Problem.PeakNumber));
-         PeaksTau    = Problem.tau(ii-1,:) + (Problem.TauSeverity.*randn(1,Problem.PeakNumber));
-         PeaksEta    = Problem.eta(:,:,ii-1) + (randn(Problem.PeakNumber,4).* Problem.EtaSeverity);
+
+         % PeaksWidth  = Problem.PeaksWidth(:,:,ii-1) + (randn(Problem.PeakNumber,Problem.Dimension).* Problem.WidthSeverity);
+         Gwidth = zeros(Problem.PeakNumber, Problem.Dimension);      % [MOD]
+         for rr = 1:Problem.PeakNumber                               % [MOD]
+             for cc = 1:Problem.Dimension                            % [MOD]
+                 Gwidth(rr,cc) = R.nextGaussian();                   % [MOD]
+             end                                                     % [MOD]
+         end                                                         % [MOD]
+         PeaksWidth  = Problem.PeaksWidth(:,:,ii-1) + (Gwidth .* Problem.WidthSeverity); % [MOD]
+
+         % PeaksHeight = Problem.PeaksHeight(ii-1,:) + (Problem.HeightSeverity*randn(1,Problem.PeakNumber));
+         Gheight = zeros(1, Problem.PeakNumber);                     % [MOD]
+         for cc = 1:Problem.PeakNumber                               % [MOD]
+             Gheight(1,cc) = R.nextGaussian();                       % [MOD]
+         end                                                         % [MOD]
+         PeaksHeight = Problem.PeaksHeight(ii-1,:) + (Problem.HeightSeverity*Gheight); % [MOD]
+
+         % PeaksAngle  = Problem.PeaksAngle(ii-1,:) + (Problem.AngleSeverity.*randn(1,Problem.PeakNumber));
+         Gangle = zeros(1, Problem.PeakNumber);                      % [MOD]
+         for cc = 1:Problem.PeakNumber                               % [MOD]
+             Gangle(1,cc) = R.nextGaussian();                        % [MOD]
+         end                                                         % [MOD]
+         PeaksAngle  = Problem.PeaksAngle(ii-1,:) + (Problem.AngleSeverity.*Gangle); % [MOD]
+
+         % PeaksTau    = Problem.tau(ii-1,:) + (Problem.TauSeverity.*randn(1,Problem.PeakNumber));
+         Gtau = zeros(1, Problem.PeakNumber);                        % [MOD]
+         for cc = 1:Problem.PeakNumber                               % [MOD]
+             Gtau(1,cc) = R.nextGaussian();                          % [MOD]
+         end                                                         % [MOD]
+         PeaksTau    = Problem.tau(ii-1,:) + (Problem.TauSeverity.*Gtau); % [MOD]
+
+         % PeaksEta    = Problem.eta(:,:,ii-1) + (randn(Problem.PeakNumber,4).* Problem.EtaSeverity);
+         Geta = zeros(Problem.PeakNumber,4);                         % [MOD]
+         for rr = 1:Problem.PeakNumber                               % [MOD]
+             for cc = 1:4                                            % [MOD]
+                 Geta(rr,cc) = R.nextGaussian();                     % [MOD]
+             end                                                     % [MOD]
+         end                                                         % [MOD]
+         PeaksEta    = Problem.eta(:,:,ii-1) + (Geta .* Problem.EtaSeverity); % [MOD]
+
          tmp = PeaksAngle > Problem.MaxAngle;
          PeaksAngle(tmp) = (2*Problem.MaxAngle)- PeaksAngle(tmp);
          tmp = PeaksAngle < Problem.MinAngle;
@@ -150,7 +258,7 @@ function Problem = BenchmarkGenerator_GMPB(BenchmarkName, ConfigurableParameters
          Problem.tau(ii,:)            = PeaksTau;
          Problem.eta(:,:,ii)          = PeaksEta;
          for jj=1 : Problem.PeakNumber
-             Problem.RotationMatrix{ii}(:,:,jj) = Problem.InitialRotationMatrix(:,:,jj) * Rotation(Problem.PeaksAngle(ii,jj),Problem.Dimension);
+             Problem.RotationMatrix{ii}(:,:,jj) = Problem.InitialRotationMatrix(:,:,jj) * Rotation(Problem.PeaksAngle(ii,jj),Problem.Dimension,R); % [MOD] R passed in
          end
          Problem.Environmentcounter = Problem.Environmentcounter + 1;
          [Problem.OptimumValue(ii), Problem.OptimumID(ii)] = max(PeaksHeight);
@@ -163,7 +271,7 @@ function Problem = BenchmarkGenerator_GMPB(BenchmarkName, ConfigurableParameters
      Problem.Environmentcounter = 1;
 end
 %% GMPB Function
-function output = Rotation(teta,Dimension)
+function output = Rotation(teta,Dimension,R)                         % [MOD] R passed in
 counter = 0;
 PageNumber = Dimension * ((Dimension-1)/2);
 X = NaN(Dimension,Dimension,PageNumber);
@@ -181,8 +289,43 @@ for ii=1 : Dimension
     end
 end
 output = eye(Dimension);
-tmp = randperm(PageNumber);
+% tmp = randperm(PageNumber);
+tmp = FisherYatesShuffle(PageNumber, R);                             % [MOD]
 for ii=1 : PageNumber
     output = output * X(:,:,tmp(ii));
 end
+end
+
+% [MOD] Classical column-by-column Gram-Schmidt, replacing qr(). qr() uses Householder reflections
+% via LAPACK; both orthogonalise the same input but not to the same matrix, so a from-scratch port
+% cannot reproduce it. Gram-Schmidt is fully specified, so the Kotlin side matches it exactly.
+function Q = GramSchmidt(X)
+    D = size(X,1);
+    Q = zeros(D,D);
+    for col = 1:D
+        v = X(:,col);
+        for prev = 1:col-1
+            dotp = Q(:,prev)' * v;
+            v = v - dotp * Q(:,prev);
+        end
+        nrm = max(norm(v), 1e-12);
+        Q(:,col) = v / nrm;
+    end
+end
+
+% [MOD] Fisher-Yates (Durstenfeld) shuffle driven by R, replacing randperm(). Matches the Kotlin
+% side draw-for-draw: for i counting down, pick j in [1,i] from one R.nextDouble(0,i), then swap.
+function order = FisherYatesShuffle(n, R)
+    order = 1:n;
+    for i = n:-1:1
+        j = floor(R.nextDouble(0, i)) + 1;
+        if j < 1
+            j = 1;
+        elseif j > i
+            j = i;
+        end
+        tmp = order(i);
+        order(i) = order(j);
+        order(j) = tmp;
+    end
 end
