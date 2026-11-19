@@ -22,12 +22,17 @@
 function [Optimizer,Problem] = ChangeReaction_AMPPSO(Optimizer,Problem)
 %% Updating memory
 for jj=1 : Optimizer.SwarmNumber
+    FEBefore = Problem.FE;
    [Optimizer.pop(jj).FitnessValue,Problem] = fitness(Optimizer.pop(jj).X , Problem);
+    for rr = 1:(Problem.FE - FEBefore)
+        writeTraceLine_AMPPSO(FEBefore + rr, 'change', Optimizer.pop(jj).X(rr,:), Optimizer.pop(jj).FitnessValue(rr));
+    end
     Optimizer.pop(jj).PbestValue = Optimizer.pop(jj).FitnessValue;
     Optimizer.pop(jj).PbestPosition = Optimizer.pop(jj).X;
     Optimizer.pop(jj).Gbest_past_environment = Optimizer.pop(jj).GbestPosition;
     [Optimizer.pop(jj).GbestValue,Optimizer.pop(jj).GbestID] = max(Optimizer.pop(jj).PbestValue);
     Optimizer.pop(jj).GbestPosition = Optimizer.pop(jj).PbestPosition(Optimizer.pop(jj).GbestID,:);
-    Optimizer.pop(jj).Velocity = -1 + (2) *rand(size(Optimizer.pop(jj).X,1),Optimizer.Dimension);
+    %Optimizer.pop(jj).Velocity = -1 + (2) *rand(size(Optimizer.pop(jj).X,1),Optimizer.Dimension); % --> CsvRandom
+    Optimizer.pop(jj).Velocity = -1 + (2) *rand_from_fake_rng_AMPPSO(Problem.FakeRng,size(Optimizer.pop(jj).X,1),Optimizer.Dimension);
 end
 end

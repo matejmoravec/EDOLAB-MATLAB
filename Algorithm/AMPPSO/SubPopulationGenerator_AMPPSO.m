@@ -88,7 +88,11 @@ for i=1:length(m_group)
     Swarm(i).X =m_group(i).X;
     Swarm(i).Gbest_past_environment = NaN(1,Dimension);
     Swarm(i).Shifts = [];
+    FEBefore = Problem.FE;
     [Swarm(i).FitnessValue,Problem] = fitness(Swarm(i).X,Problem);
+    for rr = 1:(Problem.FE - FEBefore)
+        writeTraceLine_AMPPSO(FEBefore + rr, 'init', Swarm(i).X(rr,:), Swarm(i).FitnessValue(rr));
+    end
     Swarm(i).PbestPosition = Swarm(i).X;
     Swarm(i).IsHibernated = 0;
     Swarm(i).IsStagnated = 0;
@@ -107,7 +111,8 @@ for i=1:length(m_group)
     Swarm(i).InitRadius = Swarm(i).InitRadius/size(Swarm(i).X,1);
     %Velocity -> -2.5 ~ 2.5 InitRadius
 %     Swarm(i).Velocity = -2.5*Swarm(i).InitRadius + (5*Swarm(i).InitRadius) *rand(size(m_group(i).X,1),Dimension);
-    Swarm(i).Velocity = 0 + 0 *rand(size(m_group(i).X,1),Dimension);    
+    %Swarm(i).Velocity = 0 + 0 *rand(size(m_group(i).X,1),Dimension); % --> CsvRandom
+    Swarm(i).Velocity = 0 + 0 *rand_from_fake_rng_AMPPSO(Problem.FakeRng,size(m_group(i).X,1),Dimension);
     Swarm(i).CurrentRadius = Swarm(i).InitRadius;
     if Problem.RecentChange == 0
         Swarm(i).PbestValue = Swarm(i).FitnessValue;
