@@ -21,7 +21,11 @@
 function [Optimizer,Problem] = ChangeReaction_AMPDE(Optimizer,Problem)
 %% Updating memory
 for jj=1 : Optimizer.SwarmNumber
+    FEBefore = Problem.FE;
    [Optimizer.pop(jj).FitnessValue,Problem] = fitness(Optimizer.pop(jj).X , Problem);
+    for rr = 1:(Problem.FE - FEBefore)
+        writeTraceLine_AMPDE(FEBefore + rr, 'change', Optimizer.pop(jj).X(rr,:), Optimizer.pop(jj).FitnessValue(rr));
+    end
     Optimizer.pop(jj).Gbest_past_environment = Optimizer.pop(jj).BestPosition;
     [Optimizer.pop(jj).BestValue,Optimizer.pop(jj).GbestID] = max(Optimizer.pop(jj).FitnessValue);
     Optimizer.pop(jj).BestPosition = Optimizer.pop(jj).X(Optimizer.pop(jj).GbestID,:);

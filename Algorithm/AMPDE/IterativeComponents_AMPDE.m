@@ -34,24 +34,27 @@ for ii=1 : Optimizer.SwarmNumber
             ID = 1:size(Optimizer.pop(ii).X,1);
             Xb = Optimizer.pop(ii).BestPosition;
             ID(Optimizer.pop(ii).GbestID) = [];
-            ID2 = randi([1,length(ID)]);
+            % randi([1,length(ID)]) --> CsvRandom
+            ID2 = randi_from_fake_rng_AMPDE(Problem.FakeRng,length(ID));
             X2 = Optimizer.pop(ii).X(ID(ID2),:);
             ID(ID2) = [];
-            ID3 = randi([1,length(ID)]);
+            ID3 = randi_from_fake_rng_AMPDE(Problem.FakeRng,length(ID));
             X3 = Optimizer.pop(ii).X(ID(ID3),:);
             ID(ID3) = [];
-            ID4 = randi([1,length(ID)]);
+            ID4 = randi_from_fake_rng_AMPDE(Problem.FakeRng,length(ID));
             X4 = Optimizer.pop(ii).X(ID(ID4),:);
             ID(ID4) = [];
 
-            ID5 = randi([1,length(ID)]);
+            ID5 = randi_from_fake_rng_AMPDE(Problem.FakeRng,length(ID));
             X5 = Optimizer.pop(ii).X(ID(ID5),:);
             ID(ID5) = [];
             Optimizer.pop(ii).Donor(pp,:) = Xb + Optimizer.F * (X2 + X3 - X4 - X5);
         %% Crossover
             for dd = 1:Optimizer.Dimension
-                rnd = rand(1,1);
-                randj = randi([1,Optimizer.Dimension]);
+                % rnd = rand(1,1);   --> CsvRandom
+                % randj = randi([1,Optimizer.Dimension]);
+                rnd = Problem.FakeRng.nextDouble(0,1);
+                randj = randi_from_fake_rng_AMPDE(Problem.FakeRng,Optimizer.Dimension);
                 if(rnd < Optimizer.CR || dd == randj)
                     Optimizer.pop(ii).Trial(pp,dd) = Optimizer.pop(ii).Donor(pp,dd);
                 else
@@ -66,6 +69,7 @@ for ii=1 : Optimizer.SwarmNumber
 
         %% Select
             [tempFit,Problem] = fitness(Optimizer.pop(ii).Trial(pp,:),Problem);
+            writeTraceLine_AMPDE(Problem.FE, 'de', Optimizer.pop(ii).Trial(pp,:), tempFit);
             if(tempFit > Optimizer.pop(ii).FitnessValue(pp))
                 Optimizer.pop(ii).X(pp,:) = Optimizer.pop(ii).Trial(pp,:);
                 Optimizer.pop(ii).FitnessValue(pp) = tempFit;
@@ -94,7 +98,8 @@ for ii=1 : Optimizer.SwarmNumber
         for tries = 1:5
             BestPosition(1,:) = Optimizer.pop(ii).X(Optimizer.pop(ii).GbestID,:);
             for gg = 1:Problem.Dimension
-                BestPosition(1,gg) = BestPosition(1,gg) + Optimizer.pop(ii).CurrentRadius*randn();
+                % BestPosition(1,gg) = BestPosition(1,gg) + Optimizer.pop(ii).CurrentRadius*randn();   --> CsvRandom
+                BestPosition(1,gg) = BestPosition(1,gg) + Optimizer.pop(ii).CurrentRadius*randn_from_fake_rng(Problem.FakeRng);
                 if BestPosition(1,gg) > Optimizer.MaxCoordinate
                    BestPosition(1,gg) = Optimizer.MaxCoordinate;
                 elseif BestPosition(1,gg) < Optimizer.MinCoordinate
@@ -102,6 +107,7 @@ for ii=1 : Optimizer.SwarmNumber
                 end
             end
             [BestResult,Problem] = fitness(BestPosition(1,:),Problem);
+            writeTraceLine_AMPDE(Problem.FE, 'brownian', BestPosition(1,:), BestResult);
             if(BestResult > Optimizer.pop(ii).FitnessValue(Optimizer.pop(ii).GbestID))
                 Optimizer.pop(ii).FitnessValue(Optimizer.pop(ii).GbestID) = BestResult;
                 Optimizer.pop(ii).X(Optimizer.pop(ii).GbestID,:) = BestPosition;
@@ -115,8 +121,9 @@ for ii=1 : Optimizer.SwarmNumber
     elseif(Optimizer.pop(ii).IsStagnated == 1)
         %Cauchy move
         for gg = 1:Problem.Dimension
-            pd= makedist('tLocationScale','mu',Optimizer.pop(ii).X(Optimizer.pop(ii).GbestID,gg),'sigma',(Optimizer.MaxCoordinate - Optimizer.MinCoordinate)/10,'nu',1);
-            Optimizer.pop(ii).X(Optimizer.pop(ii).GbestID,gg) = random(pd,1,1);
+            % pd= makedist('tLocationScale','mu',Optimizer.pop(ii).X(Optimizer.pop(ii).GbestID,gg),'sigma',(Optimizer.MaxCoordinate - Optimizer.MinCoordinate)/10,'nu',1);
+            % Optimizer.pop(ii).X(Optimizer.pop(ii).GbestID,gg) = random(pd,1,1);   --> CsvRandom
+            Optimizer.pop(ii).X(Optimizer.pop(ii).GbestID,gg) = cauchy_from_fake_rng_AMPDE(Problem.FakeRng,Optimizer.pop(ii).X(Optimizer.pop(ii).GbestID,gg),(Optimizer.MaxCoordinate - Optimizer.MinCoordinate)/10);
             if Optimizer.pop(ii).X(Optimizer.pop(ii).GbestID,gg) > Optimizer.MaxCoordinate
                 Optimizer.pop(ii).X(Optimizer.pop(ii).GbestID,gg) = Optimizer.MaxCoordinate;
             elseif Optimizer.pop(ii).X(Optimizer.pop(ii).GbestID,gg) < Optimizer.MinCoordinate
@@ -124,6 +131,7 @@ for ii=1 : Optimizer.SwarmNumber
             end
         end
         [StagnatedBestResult,Problem] = fitness(Optimizer.pop(ii).X(Optimizer.pop(ii).GbestID,:),Problem);
+        writeTraceLine_AMPDE(Problem.FE, 'cauchy', Optimizer.pop(ii).X(Optimizer.pop(ii).GbestID,:), StagnatedBestResult);
         Optimizer.pop(ii).FitnessValue(Optimizer.pop(ii).GbestID) = StagnatedBestResult;
         [BestValue,BestID] = max(Optimizer.pop(ii).FitnessValue);
         Optimizer.pop(ii).BestValue = BestValue;
@@ -275,16 +283,17 @@ if(NonStagnatedRadius < Optimizer.diversityFactor * Optimizer.domainS)
     end
 
     ritio = abs(Optimizer.CurPopSize - Optimizer.PrePopSize)/Optimizer.OffPeak;
+    % randn() / rand(1,1) --> CsvRandom
     if(ritio >= 1)
-        NextIndividuals = (Optimizer.MapPopInds(Optimizer.CurPopSize).Mean + Optimizer.MapPopInds(Optimizer.CurPopSize).StdDev*randn()) + Optimizer.StepIndivs * 1 * (Optimizer.CurPopSize - Optimizer.PrePopSize);
+        NextIndividuals = (Optimizer.MapPopInds(Optimizer.CurPopSize).Mean + Optimizer.MapPopInds(Optimizer.CurPopSize).StdDev*randn_from_fake_rng(Problem.FakeRng)) + Optimizer.StepIndivs * 1 * (Optimizer.CurPopSize - Optimizer.PrePopSize);
     elseif(ritio == 0)
-        NextIndividuals = (Optimizer.MapPopInds(Optimizer.CurPopSize).Mean + Optimizer.MapPopInds(Optimizer.CurPopSize).StdDev*randn());
+        NextIndividuals = (Optimizer.MapPopInds(Optimizer.CurPopSize).Mean + Optimizer.MapPopInds(Optimizer.CurPopSize).StdDev*randn_from_fake_rng(Problem.FakeRng));
     else
-        p = rand(1,1);
+        p = Problem.FakeRng.nextDouble(0,1);
         if(p <= ritio)
-            NextIndividuals = (Optimizer.MapPopInds(Optimizer.CurPopSize).Mean + Optimizer.MapPopInds(Optimizer.CurPopSize).StdDev*randn()) + Optimizer.StepIndivs * 1 * (Optimizer.CurPopSize - Optimizer.PrePopSize);
+            NextIndividuals = (Optimizer.MapPopInds(Optimizer.CurPopSize).Mean + Optimizer.MapPopInds(Optimizer.CurPopSize).StdDev*randn_from_fake_rng(Problem.FakeRng)) + Optimizer.StepIndivs * 1 * (Optimizer.CurPopSize - Optimizer.PrePopSize);
         else
-            NextIndividuals = (Optimizer.MapPopInds(Optimizer.CurPopSize).Mean + Optimizer.MapPopInds(Optimizer.CurPopSize).StdDev*randn());
+            NextIndividuals = (Optimizer.MapPopInds(Optimizer.CurPopSize).Mean + Optimizer.MapPopInds(Optimizer.CurPopSize).StdDev*randn_from_fake_rng(Problem.FakeRng));
         end
     end
     
@@ -305,7 +314,8 @@ if(NonStagnatedRadius < Optimizer.diversityFactor * Optimizer.domainS)
     NumRemain = size(Optimizer.remainIndivs,1);
     NumAddParticles = (ceil(NextIndividuals) - totalSurvive - NumRemain);
     if(NumAddParticles > 0)
-        AddParticles.X = Optimizer.MinCoordinate + ((Optimizer.MaxCoordinate-Optimizer.MinCoordinate).*rand(NumAddParticles,Optimizer.Dimension));
+        %AddParticles.X = Optimizer.MinCoordinate + ((Optimizer.MaxCoordinate-Optimizer.MinCoordinate).*rand(NumAddParticles,Optimizer.Dimension)); % --> CsvRandom
+        AddParticles.X = Optimizer.MinCoordinate + ((Optimizer.MaxCoordinate-Optimizer.MinCoordinate).*rand_from_fake_rng_AMPDE(Problem.FakeRng,NumAddParticles,Optimizer.Dimension));
         AddParticles.X = [AddParticles.X;Optimizer.remainIndivs];
         Optimizer.remainIndivs = [];
         [Swarms,remainIndivs,Problem] = SubPopulationGenerator_AMPDE(Optimizer.Dimension,Optimizer.MinCoordinate,Optimizer.MaxCoordinate,AddParticles,Problem);
@@ -317,7 +327,8 @@ if(NonStagnatedRadius < Optimizer.diversityFactor * Optimizer.domainS)
         Optimizer.pop = NewSwarms;
         Optimizer.SwarmNumber = length(Optimizer.pop);
     elseif(NumRemain > ceil(NextIndividuals) - totalSurvive)
-        AddParticles.X = Optimizer.MinCoordinate + ((Optimizer.MaxCoordinate-Optimizer.MinCoordinate).*rand(20,Optimizer.Dimension));
+        %AddParticles.X = Optimizer.MinCoordinate + ((Optimizer.MaxCoordinate-Optimizer.MinCoordinate).*rand(20,Optimizer.Dimension)); % --> CsvRandom
+        AddParticles.X = Optimizer.MinCoordinate + ((Optimizer.MaxCoordinate-Optimizer.MinCoordinate).*rand_from_fake_rng_AMPDE(Problem.FakeRng,20,Optimizer.Dimension));
         AddParticles.X = [AddParticles.X;Optimizer.remainIndivs];
 %         AddParticles.X = [Optimizer.remainIndivs];
         Optimizer.remainIndivs = [];

@@ -38,9 +38,9 @@ indicators = struct();
 
 for RunCounter=1 : RunNumber
     if VisualizationOverOptimization ~= 1
-        rng(RunCounter);%This random seed setting is used to initialize the Problem
+        % rng(RunCounter);%This random seed setting is used to initialize the Problem  --> CsvRandom
     end
-    Problem = BenchmarkGenerator(BenchmarkName, ConfigurableProParameters);        rng('shuffle');%Set a random seed for the optimizer
+    Problem = BenchmarkGenerator(BenchmarkName, ConfigurableProParameters);        %rng('shuffle');%Set a random seed for the optimizer    --> CsvRandom
     tic; % Start runtime tracking for the current run
     % The lines above (including the start of the loop) are common between the main files of all EDOAs.
     %% Initialiing Optimizer
@@ -70,7 +70,8 @@ for RunCounter=1 : RunNumber
     Optimizer.AdjustIter = 0;
     Optimizer.DisAccuracy = 0.2;
     Optimizer.AvoidanceFlag = 0;
-    InitSwarm.X = Optimizer.MinCoordinate + ((Optimizer.MaxCoordinate-Optimizer.MinCoordinate).*rand(Optimizer.initPopulationSize,Optimizer.Dimension));
+    %InitSwarm.X = Optimizer.MinCoordinate + ((Optimizer.MaxCoordinate-Optimizer.MinCoordinate).*rand(Optimizer.initPopulationSize,Optimizer.Dimension)); % --> CsvRandom
+    InitSwarm.X = Optimizer.MinCoordinate + ((Optimizer.MaxCoordinate-Optimizer.MinCoordinate).*rand_from_fake_rng_AMPDE(Problem.FakeRng,Optimizer.initPopulationSize,Optimizer.Dimension));
     [Optimizer.pop,Optimizer.remainIndivs,Problem] = SubPopulationGenerator_AMPDE(Optimizer.Dimension,Optimizer.MinCoordinate,Optimizer.MaxCoordinate,InitSwarm,Problem);
     Optimizer.SwarmNumber = length(Optimizer.pop);
     Map = struct('Mean',0,'StdDev',0,'Num',0,'Indivs',[]);            %database for swarm adaptive change 

@@ -89,7 +89,11 @@ Swarm = repmat(population,[length(m_group),1]);
 for i=1:length(m_group)
     Swarm(i).X =m_group(i).X;
     Swarm(i).Gbest_past_environment = NaN(1,Dimension);
+    FEBefore = Problem.FE;
     [Swarm(i).FitnessValue,Problem] = fitness(Swarm(i).X,Problem);
+    for rr = 1:(Problem.FE - FEBefore)
+        writeTraceLine_AMPDE(FEBefore + rr, 'init', Swarm(i).X(rr,:), Swarm(i).FitnessValue(rr));
+    end
     Swarm(i).IsHibernated = 0;
     Swarm(i).IsStagnated = 0;
     Swarm(i).StagnatingCount = 0;
