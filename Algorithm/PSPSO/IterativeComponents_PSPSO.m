@@ -5,7 +5,10 @@ function [Optimizer , Problem] = IterativeComponents_PSPSO(Optimizer,Problem)
 for ii=1 : Optimizer.SwarmNumber
 
     if(Optimizer.pop(ii).IsConverged == 0)
-        Optimizer.pop(ii).Velocity = Optimizer.w * (Optimizer.pop(ii).Velocity + (Optimizer.c1 * rand(size(Optimizer.pop(ii).X,1) , Optimizer.Dimension).*(Optimizer.pop(ii).PbestPosition - Optimizer.pop(ii).X)) + (Optimizer.c2*rand(size(Optimizer.pop(ii).X,1), Optimizer.Dimension).*(repmat(Optimizer.pop(ii).GbestPosition,size(Optimizer.pop(ii).X,1),1) - Optimizer.pop(ii).X)));
+        %Optimizer.pop(ii).Velocity = Optimizer.w * (Optimizer.pop(ii).Velocity + (Optimizer.c1 * rand(size(Optimizer.pop(ii).X,1) , Optimizer.Dimension).*(Optimizer.pop(ii).PbestPosition - Optimizer.pop(ii).X)) + (Optimizer.c2*rand(size(Optimizer.pop(ii).X,1), Optimizer.Dimension).*(repmat(Optimizer.pop(ii).GbestPosition,size(Optimizer.pop(ii).X,1),1) - Optimizer.pop(ii).X))); % --> CsvRandom
+        R1 = rand_from_fake_rng_PSPSO(Problem.FakeRng,size(Optimizer.pop(ii).X,1),Optimizer.Dimension);
+        R2 = rand_from_fake_rng_PSPSO(Problem.FakeRng,size(Optimizer.pop(ii).X,1),Optimizer.Dimension);
+        Optimizer.pop(ii).Velocity = Optimizer.w * (Optimizer.pop(ii).Velocity + (Optimizer.c1 * R1.*(Optimizer.pop(ii).PbestPosition - Optimizer.pop(ii).X)) + (Optimizer.c2*R2.*(repmat(Optimizer.pop(ii).GbestPosition,size(Optimizer.pop(ii).X,1),1) - Optimizer.pop(ii).X)));
         Optimizer.pop(ii).X = Optimizer.pop(ii).X + Optimizer.pop(ii).Velocity;
         for jj=1 : size(Optimizer.pop(ii).X,1)
             for kk=1 : Optimizer.Dimension
@@ -18,7 +21,11 @@ for ii=1 : Optimizer.SwarmNumber
                 end
             end
         end
+        FEBefore = Problem.FE;
         [tmp,Problem] = fitness(Optimizer.pop(ii).X,Problem);
+        for rr = 1:(Problem.FE - FEBefore)
+            writeTraceLine_PSPSO(FEBefore + rr, 'pso', Optimizer.pop(ii).X(rr,:), tmp(rr));
+        end
         if Problem.RecentChange == 1
             return;
         end
@@ -82,11 +89,17 @@ while(idx ~= -1)
 end
 
 %% Random Subpop Perturbation
-randomSubPopIndex = randperm(Optimizer.SwarmNumber, 1);
+%randomSubPopIndex = randperm(Optimizer.SwarmNumber, 1); % --> CsvRandom
+randomSubPopIndex = randi_from_fake_rng_PSPSO(Problem.FakeRng, Optimizer.SwarmNumber);
+FEBefore = Problem.FE;
 [Optimizer.pop(randomSubPopIndex).PbestValue, Problem] = fitness(Optimizer.pop(randomSubPopIndex).PbestPosition, Problem);
+for rr = 1:(Problem.FE - FEBefore)
+    writeTraceLine_PSPSO(FEBefore + rr, 'perturb', Optimizer.pop(randomSubPopIndex).PbestPosition(rr,:), Optimizer.pop(randomSubPopIndex).PbestValue(rr));
+end
 [Optimizer.pop(randomSubPopIndex).GbestValue, BestPbestID] = max(Optimizer.pop(randomSubPopIndex).PbestValue);
 Optimizer.pop(randomSubPopIndex).GbestPosition = Optimizer.pop(randomSubPopIndex).PbestPosition(BestPbestID, :);
-Optimizer.pop(randomSubPopIndex).Velocity = Optimizer.pop(randomSubPopIndex).Velocity + (-Optimizer.PerturbationRange + 2 * Optimizer.PerturbationRange .* rand(size(Optimizer.pop(randomSubPopIndex).X, 1), Optimizer.Dimension));
+%Optimizer.pop(randomSubPopIndex).Velocity = Optimizer.pop(randomSubPopIndex).Velocity + (-Optimizer.PerturbationRange + 2 * Optimizer.PerturbationRange .* rand(size(Optimizer.pop(randomSubPopIndex).X, 1), Optimizer.Dimension)); % --> CsvRandom
+Optimizer.pop(randomSubPopIndex).Velocity = Optimizer.pop(randomSubPopIndex).Velocity + (-Optimizer.PerturbationRange + 2 * Optimizer.PerturbationRange .* rand_from_fake_rng_PSPSO(Problem.FakeRng, size(Optimizer.pop(randomSubPopIndex).X, 1), Optimizer.Dimension));
 
 
 %% Update Current Radius
@@ -135,7 +148,8 @@ if(SurvivedParticles < Optimizer.initPopulationSize * Optimizer.DiversityDegree)
     end    
 
     NumAddParticles = Optimizer.initPopulationSize - SurvivedParticles - count; 
-    AddParticles.X = Optimizer.MinCoordinate + ((Optimizer.MaxCoordinate-Optimizer.MinCoordinate).*rand(NumAddParticles,Optimizer.Dimension));
+    %AddParticles.X = Optimizer.MinCoordinate + ((Optimizer.MaxCoordinate-Optimizer.MinCoordinate).*rand(NumAddParticles,Optimizer.Dimension)); % --> CsvRandom
+    AddParticles.X = Optimizer.MinCoordinate + ((Optimizer.MaxCoordinate-Optimizer.MinCoordinate).*rand_from_fake_rng_PSPSO(Problem.FakeRng, NumAddParticles, Optimizer.Dimension));
     AddParticles.X = [AddParticles.X;SaveBestPosition];
     [Swarms,Problem] = SubPopulationGenerator_PSPSO(Optimizer.Dimension,Optimizer.MinCoordinate,Optimizer.MaxCoordinate,AddParticles,Problem, Optimizer.SwarmSize);
     if Problem.RecentChange == 1

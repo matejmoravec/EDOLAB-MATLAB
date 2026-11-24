@@ -1,7 +1,11 @@
 function [Swarm, Problem] = SubPopulationGenerator_PSPSO(Dimension, MinCoordinate, MaxCoordinate, InitSwarm, Problem, SwarmSize)
     
     % Evaluate fitness for all particles first
+    FEBefore = Problem.FE;
     [fitnessValues, Problem] = fitness(InitSwarm.X, Problem);
+    for rr = 1:(Problem.FE - FEBefore)
+        writeTraceLine_PSPSO(FEBefore + rr, 'spec', InitSwarm.X(rr,:), fitnessValues(rr));
+    end
     InitSwarm.FitnessValues = fitnessValues;
 
     % Sort particles by their fitness in descending order
@@ -35,7 +39,8 @@ function [Swarm, Problem] = SubPopulationGenerator_PSPSO(Dimension, MinCoordinat
     for i = 1:length(clusters)
         clusterIndices = clusters{i};
         Swarm(i).X = InitSwarm.X(clusterIndices, :);
-        Swarm(i).Velocity = -(MaxCoordinate - MinCoordinate) / 4 + (2 * (MaxCoordinate - MinCoordinate) / 4) * rand(size(Swarm(i).X, 1), Dimension);
+        %Swarm(i).Velocity = -(MaxCoordinate - MinCoordinate) / 4 + (2 * (MaxCoordinate - MinCoordinate) / 4) * rand(size(Swarm(i).X, 1), Dimension); % --> CsvRandom
+        Swarm(i).Velocity = -(MaxCoordinate - MinCoordinate) / 4 + (2 * (MaxCoordinate - MinCoordinate) / 4) * rand_from_fake_rng_PSPSO(Problem.FakeRng, size(Swarm(i).X, 1), Dimension);
         %Swarm(i).Shifts = [];
         Swarm(i).FitnessValue = fitnessValues(clusterIndices);
         Swarm(i).PbestPosition = Swarm(i).X;
